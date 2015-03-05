@@ -3,6 +3,7 @@ package controllers;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.*;
 
 import models.*;
 import views.*;
@@ -62,27 +63,27 @@ public class ExpensesController {
 			}
 		});
 		
-		expensesFrame.addExpense(new ActionListener() { // on-click of sign up
+		expensesFrame.addExpense(new ActionListener() { // on-click of add expense
 			public void actionPerformed(ActionEvent e) {
-				
 				addExpense();
+				return;
 			}
 		});
 		
 		expensesFrame.updateStatus(new ActionListener() { // on-click of update status
 			public void actionPerformed(ActionEvent e) {
-				// TODO:
-				// change the status of an item from paid -> unpaid, unpaid -> paid
+				updateStatus();
 			}
 		});
 		
 		expensesFrame.deleteExpense(new ActionListener() { // on-click of delete
 			public void actionPerformed(ActionEvent e) {
-				// TODO:
-				// delete an item
-				// reload 'ViewExpensesPanel' with all data
+				delete();
 			}
 		});
+		
+		// need updateAll...
+		// need deleteAll...
 	}
 	
 	public void addExpense() {
@@ -100,6 +101,7 @@ public class ExpensesController {
 				
 				expensesFrame.topPanel.setVisible(true);	// put back the top panel
 				viewExpenses();
+				return;
 			}
 		});
 		
@@ -113,4 +115,74 @@ public class ExpensesController {
 			}
 		});
 	}
+	
+	public void updateStatus() {
+		JTable table = viewExpensesPanel.table;
+
+		int row = table.getSelectedRow();	// get current selected row
+		
+		if(row == -1) 						// no row selected
+			JOptionPane.showMessageDialog(null, 
+					"Please select the expense you want to update!", "ERROR", JOptionPane.ERROR_MESSAGE);
+		else {
+			int expenseID = Integer.parseInt((String) table.getValueAt(row, 0));
+			String mode = (String) table.getValueAt(row, 7);
+			String oldstatus = (String) table.getValueAt(row, 8);
+			String newstatus;
+			
+			if(oldstatus.equalsIgnoreCase("Paid"))
+				newstatus = "UNPAID";
+			else
+				newstatus = "PAID";
+			
+			if((mode.equalsIgnoreCase("Cash") || mode.equalsIgnoreCase("Debit")) && newstatus.equalsIgnoreCase("Unpaid")) {
+				JOptionPane.showMessageDialog(null, "ERROR: \"UNPAID\" is only available for expenses paid by Credit Card");
+				return;	
+			}
+											
+			try {
+				Expense_BLL expense = new Expense_BLL();
+				expense.updateExpense(expenseID, "status", newstatus);
+				JOptionPane.showMessageDialog(null, "Expense has been changed!");
+				expensesFrame.middlePanel.remove(viewExpensesPanel);;
+				viewExpensesPanel = new ViewExpensesPanel(username);
+				expensesFrame.middlePanel.add(viewExpensesPanel, "view");
+				cLayout.show(expensesFrame.middlePanel, "view");
+				return;
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				return;
+			}
+		}
+	}
+	
+	public void delete() {
+		JTable table = viewExpensesPanel.table;
+
+		int row = table.getSelectedRow();	// get current selected row
+		
+		if(row == -1) 						// no row selected
+			JOptionPane.showMessageDialog(null, 
+					"Please select the expense you want to update!", "ERROR", JOptionPane.ERROR_MESSAGE);
+		else {
+			int expenseID = Integer.parseInt((String) table.getValueAt(row, 0));
+											
+			try {
+				Expense_BLL expense = new Expense_BLL();
+				expense.deleteExpense(expenseID);
+				JOptionPane.showMessageDialog(null, "Expense has been deleted!");
+				expensesFrame.middlePanel.remove(viewExpensesPanel);;
+				viewExpensesPanel = new ViewExpensesPanel(username);
+				expensesFrame.middlePanel.add(viewExpensesPanel, "view");
+				cLayout.show(expensesFrame.middlePanel, "view");
+				return;
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				return;
+			}
+		}
+	}
+	
 }

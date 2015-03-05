@@ -37,6 +37,7 @@ public class UsersController {
 		loginPanel.showSignup(new ActionListener() { // on-click of sign up
 			public void actionPerformed(ActionEvent e) {
 				signup();
+				return;
 			}
 		});
 		
@@ -95,6 +96,7 @@ public class UsersController {
 		signupPanel.cancelSignup(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				login();
+				return;
 			}
 		});
 		

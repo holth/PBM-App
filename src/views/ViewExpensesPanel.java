@@ -16,6 +16,8 @@ public class ViewExpensesPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	public JTable table;
+	
 	public ViewExpensesPanel(String username) {
 		
         this.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -57,7 +59,7 @@ public class ViewExpensesPanel extends JPanel {
 			e1.printStackTrace();
 		}
 		
-		JTable table = new JTable(model);
+		table = new JTable(model);
 		table.setColumnSelectionAllowed(false);
 	    table.setRowSelectionAllowed(true);
 	    
