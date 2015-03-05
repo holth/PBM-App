@@ -83,10 +83,10 @@ public class AddExpensePanel extends JPanel {
 		Font lblFont = new Font("Tacoma", 0, 12); 		// Default font for label
 		Font fieldFont = new Font("Tacoma", 0, 13); 	// Default font for fields
 
-		Dimension lblSize = new Dimension(110, 32);		// Default dimension for label
+		Dimension lblSize = new Dimension(110, 32);			// Default dimension for label
 		Dimension lblSizeSM = new Dimension(55, 32);		// Default dimension for label
-		Dimension fieldSize = new Dimension(240, 32);		// Default dimension for label
-		Dimension fieldSizeSM = new Dimension(120, 32);		// Default dimension for label
+		Dimension fieldSize = new Dimension(240, 32);		// Default dimension for fields
+		Dimension fieldSizeSM = new Dimension(120, 32);		// Default dimension for fields
 		
 		this.setLayout(new GridBagLayout());				// Set layout to GidBagLayout
 		GridBagConstraints gbc = new GridBagConstraints();	// the constraints
@@ -108,7 +108,7 @@ public class AddExpensePanel extends JPanel {
         // end ...
 		
 		// Label & fields for expense category
-		gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 1;
+		gbc.gridx = 0; gbc.gridy++; gbc.gridwidth = 1;
 		
         JLabel lblCategory = new JLabel("Category");
         lblCategory.setHorizontalAlignment(SwingConstants.LEFT);
@@ -116,7 +116,7 @@ public class AddExpensePanel extends JPanel {
         lblCategory.setPreferredSize(lblSize);
 		this.add(lblCategory, gbc);
 
-		gbc.gridx = 1; gbc.gridy = 1;
+		gbc.gridx = 1;
         
 		selectCategory = new JComboBox<String>();
 		selectCategory.setModel(new DefaultComboBoxModel<String>(new String[] {"Food", "Entertainment", "Insurance"}));

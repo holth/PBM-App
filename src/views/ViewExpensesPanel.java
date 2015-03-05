@@ -26,11 +26,18 @@ public class ViewExpensesPanel extends JPanel {
 		scrollPane.setBounds(8, 117, 800, 411);
 		this.add(scrollPane);
 		
-		String[] colNames = {"Expense ID", "Expense Type",
+		String[] colNames = {
+				"Expense ID",
+				"Expense Type",
                 "Provider Name",
                 "Location",
                 "Amount",
-                "DateTime","Interval","Payment Mode","Status","Due Date",};
+                "DateTime",
+                "Interval",
+                "Payment Mode",
+                "Status",
+                "Due Date",
+        };
 		
 		DefaultTableModel model = null;
 		try
