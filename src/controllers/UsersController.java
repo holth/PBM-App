@@ -43,47 +43,42 @@ public class UsersController {
 		loginPanel.login(new ActionListener() { // on-click of log in
 			public void actionPerformed(ActionEvent e) {
 				
-				/*
-				 * Delete when testing done!
-				 */
-				ExpensesController expenses = new ExpensesController("AppDemo"); // load expenses controller
-				expenses.viewExpenses();
-				
-				/* hiddent to testing
-				 * 
-				String username = loginPanel.txtFieldName.getText();
-				String password = String.valueOf(loginPanel.pwdFieldPwd.getPassword());
+				String username = loginPanel.getUsername();
+				String password = String.valueOf((loginPanel.getPassword()));
 				
 				try {
 					User_BLL user = new User_BLL();
 					
 					if(username.equals("") || password.equals("")) { // empty username or password?
 						
-						JOptionPane.showMessageDialog(null, "Username or password cannot be empty.");
+						errormessages("Username or password cannot be empty.");
 						return;
 						
 					}
 
-					if(user.isUserExist(username)) { // user in DB?
+					if(!user.isUserExist(username)) { // user in DB?
+						errormessages("This username does not exist!");
+						return;
+					}
+					
 						
-						if(user.validatePin(username, password)) { // user with valid password?
-							
+					else if(!user.validatePin(username, password)) { // user with valid password?
+						errormessages("Wrong password");
+						return;
+					}
+					else{
+
 							usersFrame.dispose();
 							System.out.print("Logged in as " + username);
 							
 							ExpensesController expenses = new ExpensesController(username); // load expenses controller
 							expenses.viewExpenses();
-							
-						} else {
-							JOptionPane.showMessageDialog(null, "Wrong password");
-						}
-					} else {
-						JOptionPane.showMessageDialog(null, "This username does not exist!");
+						
 					}
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-				*/
+				
 			}
 		});
 	}
@@ -103,37 +98,48 @@ public class UsersController {
 		/**
 		 * On click of signup button
 		 * create new user, load login frame
-		signupFrame.signup(new ActionListener() {
+		 * */
+		signupPanel.signup(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				try {
 					User_BLL user = new User_BLL();
-					// Validate presence of username and password
-					if(signupFrame.getUsername().equals("") || signupFrame.getPwd().equals("") || signupFrame.getPwdConfirmation().equals("")) {
-						JOptionPane.showMessageDialog(null, "Username or passwords cannot be empty.");
-						return;
-					}
+					String username = signupPanel.getUsername();
+					String password = String.valueOf((signupPanel.getPwd()));
+					String pwdConfirm = String.valueOf(signupPanel.getPwdConfirm());
 					
-
-					// Validate match between password and confirmation
-					if(!signupFrame.getPwd().equals(signupFrame.getPwdConfirmation())) {
-						JOptionPane.showMessageDialog(null, "Passwords doest not match.");
+					// Validate presence of username and password
+					if(username.equals("") || password.equals("") || pwdConfirm.equals(""))
+					{
+						errormessages("ERROR: Signup fields are empty");
 						return;
 					}
 					
 					// Validate existence of user in DB
-					if(user.isUserExist(signupFrame.getUsername())){
-						JOptionPane.showMessageDialog(null, "This username alreay exist!");
+					else if(user.isUserExist(username)== true)
+					{
+						errormessages("ERROR: User name already exists!");
 						return;
-					} else {
-						user.createUser(signupFrame.getUsername(), signupFrame.getPwd());
-						signupFrame.getFrame().dispose();
-						System.out.println(signupFrame.getUsername() + " is created!");
-						JOptionPane.showMessageDialog(null, signupFrame.getUsername() + " is created!");
-						
+					}
+					
+					// Validate match between password and confirmation
+					else if(!password.equals(pwdConfirm))
+					{
+						errormessages("ERROR: Passaword does not match!");
+						return;
+					}
+					
+					//user account creation failure
+					else if(user.createUser(username, password) != true)
+					{
+						errormessages("ERROR: Can't create User");
+						return;
+					}
+					else {
+						System.out.println(username + " is created!");
+						JOptionPane.showMessageDialog(null, username + " is created!");
 						
 						login();
-						return;
 					}
 					
 				} catch(Exception e1) {
@@ -142,20 +148,31 @@ public class UsersController {
 				}
 			}
 		});
-		*/
+		
 		
 		/**
 		 * On click of cancel button
 		 * load login frame
-		signupFrame.cancel(new ActionListener() {
+		 * */
+		signupPanel.cancelSignup(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				signupFrame.getFrame().dispose();
 				System.out.println("Log in:");
 				login();
 			}
 		});
 		
-		 */
+		 
+	}
+	
+	/**
+	 * Error Message Dialog
+	 * @param errormessage
+	 */
+	private boolean errormessages(String errormessage)
+	{
+		JOptionPane.showMessageDialog(null, 
+				errormessage, "ERROR", JOptionPane.ERROR_MESSAGE);
+		return false;
 	}
 	
 }
