@@ -78,7 +78,7 @@ public class ExpensesController {
 		
 		expensesFrame.deleteExpense(new ActionListener() { // on-click of delete
 			public void actionPerformed(ActionEvent e) {
-				delete();
+				deleteExpense();
 			}
 		});
 		
@@ -157,7 +157,7 @@ public class ExpensesController {
 		}
 	}
 	
-	public void delete() {
+	public void deleteExpense() {
 		JTable table = viewExpensesPanel.table;
 
 		int row = table.getSelectedRow();	// get current selected row
@@ -172,7 +172,7 @@ public class ExpensesController {
 				Expense_BLL expense = new Expense_BLL();
 				expense.deleteExpense(expenseID);
 				JOptionPane.showMessageDialog(null, "Expense has been deleted!");
-				expensesFrame.middlePanel.remove(viewExpensesPanel);;
+				expensesFrame.middlePanel.remove(viewExpensesPanel);
 				viewExpensesPanel = new ViewExpensesPanel(username);
 				expensesFrame.middlePanel.add(viewExpensesPanel, "view");
 				cLayout.show(expensesFrame.middlePanel, "view");

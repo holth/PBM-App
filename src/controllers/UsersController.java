@@ -47,8 +47,10 @@ public class UsersController {
 				/*
 				 * Delete when testing done!
 				 */
+				usersFrame.dispose();
 				ExpensesController expenses = new ExpensesController("AppDemo"); // load expenses controller
 				expenses.viewExpenses();
+				return;
 				
 				/* hiddent to testing
 				 * 
