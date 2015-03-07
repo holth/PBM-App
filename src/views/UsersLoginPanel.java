@@ -94,4 +94,21 @@ public class UsersLoginPanel extends JPanel {
 		btnLogin.addActionListener(listener);
 	}
 	
+	//*************************************************************************************************
+	//**************Getter and Setter methods for login and signup*************************************
+	//*************************************************************************************************
+	/**
+	 * Get User Name
+	 * @return String
+	 */
+	public String getUsername(){
+		return txtFieldName.getText();
+	}
+	/**
+	 * Get the Password
+	 * @return char[]
+	 */
+	public char[] getPassword(){
+		return pwdFieldPwd.getPassword();
+	}
 }

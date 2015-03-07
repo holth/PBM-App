@@ -89,5 +89,33 @@ public class UsersSignupPanel extends JPanel {
 	public void cancelSignup(ActionListener listener) {
 		btnCancelSignup.addActionListener(listener);
 	}
-	
+
+	public void signup(ActionListener listener) {
+		btnSignup.addActionListener(listener);
+	}
+
+	//*************************************************************************************************
+	//**************Getter and Setter methods for login and signup*************************************
+	//*************************************************************************************************
+	/**
+	 * Get User Name
+	 * @return String
+	 */
+	public String getUsername(){
+		return txtFieldName.getText();
+	}
+	/**
+	 * Get the Password
+	 * @return char[]
+	 */
+	public char[] getPwd(){
+		return pwdFieldPwd.getPassword();
+	}
+	/**
+	 * Get the Password confirmation
+	 * @return char[]
+	 */
+	public char[] getPwdConfirm(){
+		return pwdFieldPwdConfirm.getPassword();
+	}
 }
