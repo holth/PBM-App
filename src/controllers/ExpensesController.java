@@ -76,27 +76,14 @@ public class ExpensesController {
 		}
 	}
 	
-	public void saveExpense(PurchaseExpense expense) {
-		
-		String accountType = expense.paymentMode;
-		String providerName = expense.providerName;
-		String providerType = expense.expenseType;
-		String address = expense.providerAddress;
-		Float amount = expense.amount;
-		String type = expense.expenseType;
-		String status = expense.status;
-		String duration = "";
-		String dateTime = expense.date;
-		String dueDate = expense.dueDate;
-		
+	public void saveExpense(String type, String category, String name, String address, String date, 
+			Float amount, String interval, String mode, String status, String due_date) {
 		
 		try {
 			Expense_BLL expenseModel = new Expense_BLL();
 			
-			boolean success = expenseModel.addExpense(username, accountType,
-					providerName, providerType, address,
-					amount, type, status, duration,
-					dateTime, dueDate);
+			boolean success = expenseModel.addExpense(username, mode, name, type, address,
+					amount, category, status, interval, date, due_date);
 			
 			if(success) {
 				// purchaseExpensePanel.clearAllFields();
@@ -112,41 +99,6 @@ public class ExpensesController {
 		
 	}
 	
-	public void saveExpense(BillExpense expense) {
-		
-		String accountType = expense.paymentMode;
-		String providerName = expense.providerName;
-		String providerType = expense.expenseType;
-		String address = "";
-		Float amount = expense.amount;
-		String type = expense.expenseType;
-		String status = expense.status;
-		String duration = expense.interval;
-		String dateTime = "";
-		String dueDate = expense.dueDate;
-		
-		
-		try {
-			Expense_BLL expenseModel = new Expense_BLL();
-			
-			boolean success = expenseModel.addExpense(username, accountType,
-					providerName, providerType, address,
-					amount, type, status, duration,
-					dateTime, dueDate);
-			
-			if(success) {
-				// billExpensePanel.clearAllFields();
-				expensesFrame.hideExpenseForm();
-				refreshData();
-				JOptionPane.showMessageDialog(null, "Expense saved successfully!");
-			}
-			
-		} catch(Exception e) {
-			JOptionPane.showMessageDialog(null, "Unable to save expense!");
-			e.printStackTrace();
-		}
-		
-	}
 	
 	public void updateStatus() {
 		JTable table = viewExpensesPanel.getTable();
@@ -245,12 +197,35 @@ public class ExpensesController {
 		billExpensePanel.save(new ActionListener() { // on-click of save
 			public void actionPerformed(ActionEvent e) {
 				
-				BillExpense bill = new BillExpense(billExpensePanel.getProvider(),
-						"", billExpensePanel.getAmount(),
-						billExpensePanel.getInterval(), billExpensePanel.getMode(),
-						billExpensePanel.getStatus(), billExpensePanel.getDueDate());
+				String type = "Bill";
+				String category = billExpensePanel.getCategory();
+				String bname = billExpensePanel.getProvider();
+				String baddress = billExpensePanel.getAddress();
+				String bdate = "N/A";
+				String bamount = billExpensePanel.getAmount();
+				String binterval = billExpensePanel.getInterval();
+				String bmode = billExpensePanel.getMode();
+				String bstatus = billExpensePanel.getStatus();
+				String bdue_date = billExpensePanel.getDueDate();
 				
-				saveExpense(bill);
+				if(bmode == "Cash" || bmode == "Debit")
+				{
+					bstatus = "Paid";
+					bdue_date = "NA";
+				}
+				if(bstatus == "Paid")
+					bdue_date = "NA";
+				if(bname.equals("") || bamount.equals("") || bmode.equals("") || bstatus.equals("")|| bdue_date.equals("") ||
+						binterval.equals("") ||baddress.equals(""))
+					errormessages("ERROR: Bill Fields are empty!");
+				else if(!isNumeric(bamount)){
+					errormessages("ERROR: Amount should be numeric!");
+				}
+				else 
+				{
+					Float bamountFloat = Float.valueOf(bamount);
+					saveExpense(type, category, bname, baddress, bdate, bamountFloat, binterval, bmode, bstatus, bdue_date);
+				}
 			}
 		});
 		
@@ -263,12 +238,39 @@ public class ExpensesController {
 		purchaseExpensePanel.save(new ActionListener() { // on-click of save
 			public void actionPerformed(ActionEvent e) {
 				
-				PurchaseExpense purchase = new PurchaseExpense(purchaseExpensePanel.getProvider(),
-						purchaseExpensePanel.getAddress(), purchaseExpensePanel.getDate(), 
-						purchaseExpensePanel.getAmount(), purchaseExpensePanel.getMode(),
-						purchaseExpensePanel.getStatus(), purchaseExpensePanel.getDueDate());
+				String type = "Purchase";
+				String category = purchaseExpensePanel.getCategory();
+				String pname = purchaseExpensePanel.getProvider();
+				String paddress = purchaseExpensePanel.getAddress();
+				String pdate = "";
+				if(purchaseExpensePanel.getDate() != null)
+					pdate = purchaseExpensePanel.getDate().toString();
+				String pamount = purchaseExpensePanel.getAmount();
+				String pinterval = "N/A";
+				String pmode = purchaseExpensePanel.getMode();
+				String pstatus = purchaseExpensePanel.getStatus();
+				String pdue_date = purchaseExpensePanel.getDueDate();
 				
-				saveExpense(purchase);
+				if(pmode == "Cash" || pmode == "Debit")
+				{
+					pstatus = "Paid";
+					pdue_date = "NA";
+				}
+				if(pstatus == "Paid")
+					pdue_date = "NA";
+				if(pname.equals("") ||paddress.equals("") || pdate.equals("") ||pamount.equals("") ||pmode.equals("") 
+						|| pstatus.equals("") || pdue_date.equals(""))
+				{
+					errormessages("ERROR: Purchase Fields are empty!");
+				}
+				else if(!isNumeric(pamount))
+					errormessages("ERROR: Amount should be numeric!");
+				else
+				{
+					float pamountFloat = Float.valueOf(pamount);
+					saveExpense(type, category, pname, paddress, pdate, pamountFloat, pinterval, pmode, pstatus, pdue_date);
+				}
+			
 			}
 		});
 		
@@ -291,4 +293,33 @@ public class ExpensesController {
 		expensesFrame.getMiddlePanel().add(viewExpensesPanel, BorderLayout.CENTER);
 		expensesFrame.getMiddlePanel().revalidate();
 	}
+	
+	/**
+	 * Error Message Dialog
+	 * @param errormessage
+	 */
+	private boolean errormessages(String errormessage)
+	{
+		JOptionPane.showMessageDialog(null, 
+				errormessage, "ERROR", JOptionPane.ERROR_MESSAGE);
+		return false;
+	}
+	
+	/**
+	 * Check if a string is numeric
+	 * @param str
+	 */
+	public boolean isNumeric(String str)
+	{
+		try
+		{
+			float d = Float.valueOf(str);
+		}
+		catch(NumberFormatException e1)
+		{
+			return false;
+		}
+		return true;
+	}//end of numeric method
+	
 }
