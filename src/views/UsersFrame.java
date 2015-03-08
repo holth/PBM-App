@@ -11,8 +11,15 @@ public class UsersFrame extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public JPanel mainPanel;
-
+	private JPanel mainPanel;
+	private UsersLoginPanel loginPanel = new UsersLoginPanel();
+	private UsersSignupPanel signupPanel = new UsersSignupPanel();
+	
+	private CardLayout cLayout = new CardLayout();
+	
+	/**
+	 * Constructor
+	 */
 	public UsersFrame() {
 
 		this.getContentPane().setBackground(new Color(242, 242, 242));
@@ -25,5 +32,36 @@ public class UsersFrame extends JFrame {
 		mainPanel.setBounds(0, 0, 600, 400);
 		this.getContentPane().add(mainPanel);
 		
+		mainPanel.setLayout(cLayout); 			// set main panel as container
+		mainPanel.add(loginPanel, "login");	
+		mainPanel.add(signupPanel, "signup");
+		
+		cLayout.show(mainPanel, "login");		// show login by default
 	}
+	
+	/// Getter methods ///
+	
+	public CardLayout getLayout() {
+		return cLayout;
+	}
+	
+	public UsersLoginPanel getLoginPanel() {
+		return loginPanel;
+	}
+	
+	public UsersSignupPanel getSignupPanel() {
+		return signupPanel;
+	}
+	
+	/// Setter methods ///
+	
+	public void showSignupPanel() {
+		cLayout.show(mainPanel, "signup");
+	}
+	
+	public void showLoginPanel() {
+		cLayout.show(mainPanel, "login");
+	}
+	
+	
 }

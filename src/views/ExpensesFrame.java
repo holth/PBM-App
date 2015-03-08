@@ -2,7 +2,9 @@ package views;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class ExpensesFrame extends JFrame {
@@ -12,30 +14,27 @@ public class ExpensesFrame extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public JPanel mainPanel;
-	public JPanel topPanel;
-	public JPanel middlePanel;
-	public JPanel bottomPanel;
+	private JPanel mainPanel;
+	private JPanel topPanel;
+	private JPanel middlePanel;
+	private JPanel rightPanel;
 	
-	public JPanel btnsForViewExpenses;
-	public JPanel btnsForAddExpense;
+	private ViewExpensesPanel expensesPanel;
+	private AddExpensePanel purchaseExpensePanel = new AddExpensePanel("purchase");
+	private AddExpensePanel billExpensePanel = new AddExpensePanel("bill");
 	
-	public JComboBox<String> selectType;
-	public JComboBox<String> selectCategory;
-	public JComboBox<String> selectProvider;
+	private CardLayout cLayout = new CardLayout();
 	
-	public JButton btnFilter;
-	public JButton btnClearFilter;
-	public JButton btnDeleteAll;
+	private String username;
 	
-	public JButton btnShowExpenses;
-	public JButton btnAddExpense;
-	public JButton btnUpdateStatus;
-	public JButton btnDeleteExpense;
-	public JButton btnSaveExpense;
-	
+	private JButton btnAddExpense;
+	private JButton btnUpdateStatus;
+	private JButton btnDeleteExpense;
 
-	public ExpensesFrame() {
+	public ExpensesFrame(String username) {
+		
+		this.username = username;
+		this.expensesPanel = new ViewExpensesPanel(username);
 		
 		this.getContentPane().setBackground(new Color(248, 248, 248));
 		this.setBounds(100, 100, 1000, 600);
@@ -52,25 +51,18 @@ public class ExpensesFrame extends JFrame {
 		mainPanel.add(topPanel, BorderLayout.NORTH);
 		
 		loadMiddlePanel();
+		middlePanel.setLayout(new BorderLayout());
+		middlePanel.add(expensesPanel, BorderLayout.CENTER);
 		mainPanel.add(middlePanel, BorderLayout.CENTER);
 		
-		loadBottomPanel();
-		mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+		loadRightPanel();
+		mainPanel.add(rightPanel, BorderLayout.EAST);
+		
+		rightPanel.setVisible(false);
+		
 	}
 	
 	/// Listener methods ///
-
-	public void filterExpenses(ActionListener listener) {
-		btnFilter.addActionListener(listener);
-	}
-
-	public void clearFilter(ActionListener listener) {
-		btnClearFilter.addActionListener(listener);
-	}
-
-	public void deleteAll(ActionListener listener) {
-		btnClearFilter.addActionListener(listener);
-	}
 	
 	public void addExpense(ActionListener listener) {
 		btnAddExpense.addActionListener(listener);
@@ -84,12 +76,50 @@ public class ExpensesFrame extends JFrame {
 		btnDeleteExpense.addActionListener(listener);
 	}
 	
-	public void saveExpense(ActionListener listener) {
-		btnSaveExpense.addActionListener(listener);
+	/// Getter methods ///
+	
+	public String getUsername() {
+		return username;
 	}
-
-	public void viewExpenses(ActionListener listener) {
-		btnShowExpenses.addActionListener(listener);
+	
+	public JPanel getMiddlePanel() {
+		return middlePanel;
+	}
+	
+	public ViewExpensesPanel getExpensesPanel() {
+		return expensesPanel;
+	}
+	
+	public AddExpensePanel getPurchasePanel() {
+		return purchaseExpensePanel;
+	}
+	
+	public AddExpensePanel getBillPanel() {
+		return billExpensePanel;
+	}
+	
+	/// Setter methods ///
+	
+	public void hideExpenseForm() {
+		rightPanel.setVisible(false);
+	}
+	
+	public void showAddPurchaseForm() {
+		
+		rightPanel.setVisible(true);
+		cLayout.show(rightPanel, "add purchase");
+	}
+	
+	public void showAddBillForm() {
+		
+		rightPanel.setVisible(true);
+		cLayout.show(rightPanel, "add bill");
+	}
+	
+	public void refreshExpenses() {
+		middlePanel.removeAll();
+		expensesPanel = new ViewExpensesPanel(username);
+		middlePanel.add(expensesPanel, BorderLayout.CENTER);
 	}
 	
 	/// Design methods ///
@@ -97,82 +127,47 @@ public class ExpensesFrame extends JFrame {
 	private void loadTopPanel(){
 		
         topPanel = new JPanel();
+        topPanel.setLayout(new BorderLayout(0,0));
         topPanel.setBackground(new Color(224, 224, 224));
-        topPanel.setPreferredSize(new Dimension(0, 40));
-		
-        // Label & combo-boxes to filter data
-		JLabel lblFilter = new JLabel("Filter by:");
-		topPanel.add(lblFilter);
+        topPanel.setPreferredSize(new Dimension(0, 46));
         
-		selectType = new JComboBox<String>();
-		selectType.setModel(new DefaultComboBoxModel<String>(new String[] {"Expense type", "Purchase items", "Bills"}));
-		topPanel.add(selectType);
+        JPanel btnsPanel = new JPanel();
+        btnsPanel.setOpaque(false);
+        topPanel.add(btnsPanel, BorderLayout.WEST);
         
-		selectCategory = new JComboBox<String>();
-		selectCategory.setModel(new DefaultComboBoxModel<String>(new String[] {"Category", "Food", "Internet", "Insurance"}));
-		topPanel.add(selectCategory);
+		btnAddExpense = new JButton("Add expense  ", new ImageIcon("assets/appbar.add.png"));
+		btnAddExpense.setFont(new Font("Tacoma", 0, 13));
+		btnsPanel.add(btnAddExpense);
         
-		selectProvider = new JComboBox<String>();
-		selectProvider.setModel(new DefaultComboBoxModel<String>(new String[] {"Service provider", "Videotron", "Tim horton", "Maxie et cie"}));
-		topPanel.add(selectProvider);
+		btnUpdateStatus = new JButton("Update status  ", new ImageIcon("assets/appbar.draw.pencil.png"));
+		btnUpdateStatus.setFont(new Font("Tacoma", 0, 13));
+		btnsPanel.add(btnUpdateStatus);
         
-		btnFilter = new JButton("Filter");
-		btnFilter.setFont(new Font("Tacoma", 0, 13));
-		topPanel.add(btnFilter);
+		btnDeleteExpense = new JButton("Delete expense  ", new ImageIcon("assets/appbar.close.png"));
+		btnDeleteExpense.setFont(new Font("Tacoma", 0, 13));
+		btnsPanel.add(btnDeleteExpense);
         
-		btnDeleteAll = new JButton("Delete");
-		btnDeleteAll.setFont(new Font("Tacoma", 0, 13));
-		topPanel.add(btnDeleteAll);
-        
-		btnClearFilter = new JButton("Clear");
-		btnClearFilter.setFont(new Font("Tacoma", 0, 13));
-		topPanel.add(btnClearFilter);
-		// end...
+        JLabel lblUsername = new JLabel("Hi, " + username);
+        lblUsername.setHorizontalAlignment(SwingConstants.CENTER);
+        lblUsername.setFont(new Font("Tacoma", Font.BOLD, 12));
+        lblUsername.setPreferredSize(new Dimension(140,40));
+        topPanel.add(lblUsername, BorderLayout.EAST);
 	}
 
 	private void loadMiddlePanel() {
+		
 		middlePanel = new JPanel();
         middlePanel.setBackground(new Color(0, 0, 0));
 	}
 	
-	private void loadBottomPanel() {
+	private void loadRightPanel() {
 		
-        bottomPanel = new JPanel();
-        bottomPanel.setBackground(new Color(224, 224, 224));
-        bottomPanel.setPreferredSize(new Dimension(0, 50));
-        
-        // buttons visible when on view expenses
-        btnsForViewExpenses = new JPanel();
-        btnsForViewExpenses.setBackground(new Color(224, 224, 224));
-        
-		btnAddExpense = new JButton("Add expense");
-		btnAddExpense.setFont(new Font("Tacoma", 0, 13));
-		btnsForViewExpenses.add(btnAddExpense);
-        
-		btnUpdateStatus = new JButton("Update status");
-		btnUpdateStatus.setFont(new Font("Tacoma", 0, 13));
-		btnsForViewExpenses.add(btnUpdateStatus);
-        
-		btnDeleteExpense = new JButton("Delete expense");
-		btnDeleteExpense.setFont(new Font("Tacoma", 0, 13));
-		btnsForViewExpenses.add(btnDeleteExpense);
-		// end...
+        rightPanel = new JPanel();
+        rightPanel.setBackground(new Color(224, 224, 224));
 		
-		bottomPanel.add(btnsForViewExpenses);
-		
-		// buttons visible when on add expense only
-		btnsForAddExpense = new JPanel();
-		btnsForAddExpense.setBackground(new Color(224, 224, 224));
-        
-		btnSaveExpense = new JButton("Save expense");
-		btnSaveExpense.setFont(new Font("Tacoma", 0, 13));
-		btnsForAddExpense.add(btnSaveExpense);
-        
-		btnShowExpenses = new JButton("Cancel");
-		btnShowExpenses.setFont(new Font("Tacoma", 0, 13));
-		btnsForAddExpense.add(btnShowExpenses);
-		// end ...
-		
-		bottomPanel.add(btnsForAddExpense);
+		rightPanel.setLayout(cLayout);	// set middle panel as container
+		rightPanel.add(purchaseExpensePanel, "add purchase");
+		rightPanel.add(billExpensePanel, "add bill");
 	}
+	
 }

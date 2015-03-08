@@ -27,6 +27,9 @@ public class AddExpensePanel extends JPanel {
 	private JComboBox<String> selectMode;
 	private JComboBox<String> selectStatus;
 	private JComboBox<String> selectInterval;
+	
+	private JButton btnSave;
+	private JButton btnCancel;
 
 	/**
 	 * 
@@ -37,6 +40,14 @@ public class AddExpensePanel extends JPanel {
 	}
 	
 	/// Listener methods ///
+	
+	public void save(ActionListener listener) {
+		btnSave.addActionListener(listener);
+	}
+	
+	public void cancel(ActionListener listener) {
+		btnCancel.addActionListener(listener);
+	}
 	
 	/// Get methods ///
 	
@@ -83,17 +94,19 @@ public class AddExpensePanel extends JPanel {
 		Font lblFont = new Font("Tacoma", 0, 12); 		// Default font for label
 		Font fieldFont = new Font("Tacoma", 0, 13); 	// Default font for fields
 
-		Dimension lblSize = new Dimension(110, 32);			// Default dimension for label
-		Dimension lblSizeSM = new Dimension(55, 32);		// Default dimension for label
-		Dimension fieldSize = new Dimension(240, 32);		// Default dimension for fields
+		Dimension lblSize = new Dimension(65, 32);			// Default dimension for label
+		Dimension lblSizeSM = new Dimension(45, 32);		// Default dimension for label
+		Dimension fieldSize = new Dimension(305, 32);		// Default dimension for fields
 		Dimension fieldSizeSM = new Dimension(120, 32);		// Default dimension for fields
+		// Dimension btnSize = new Dimension(175, 32);
+		// Dimension btnSizeSM = new Dimension(120, 32);
 		
 		this.setLayout(new GridBagLayout());				// Set layout to GidBagLayout
 		GridBagConstraints gbc = new GridBagConstraints();	// the constraints
 		gbc.insets = new Insets(5,5,5,5);					// Set the spacing between fields
 		
 		// Form title
-		gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
+		gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 4;
 		
 		JLabel lblTitle;
 		if(type.toLowerCase().equals("bill")) { // Title for add new bill
@@ -101,9 +114,9 @@ public class AddExpensePanel extends JPanel {
 		} else {								// Title for add new purchase
 			lblTitle = new JLabel("New purchase expense");
 		}
-        lblTitle.setHorizontalAlignment(SwingConstants.LEFT);
+        lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
         lblTitle.setFont(new Font("Tacoma", Font.BOLD, 18));
-        lblTitle.setPreferredSize(new Dimension(350,39));
+        lblTitle.setPreferredSize(new Dimension(370,39));
         this.add(lblTitle, gbc);
         // end ...
 		
@@ -116,7 +129,7 @@ public class AddExpensePanel extends JPanel {
         lblCategory.setPreferredSize(lblSize);
 		this.add(lblCategory, gbc);
 
-		gbc.gridx = 1;
+		gbc.gridx = 1; gbc.gridwidth = 3;
         
 		selectCategory = new JComboBox<String>();
 		selectCategory.setModel(new DefaultComboBoxModel<String>(new String[] {"Food", "Entertainment", "Insurance"}));
@@ -126,7 +139,7 @@ public class AddExpensePanel extends JPanel {
 		// end...
 		
 		// Label & fields for provider
-		gbc.gridx = 0; gbc.gridy++;
+		gbc.gridx = 0; gbc.gridy++; gbc.gridwidth = 1;
 		
         JLabel lblName = new JLabel("Description");
         lblName.setHorizontalAlignment(SwingConstants.LEFT);
@@ -134,7 +147,7 @@ public class AddExpensePanel extends JPanel {
         lblName.setPreferredSize(lblSize);
 		this.add(lblName, gbc);
 
-		gbc.gridx = 1;
+		gbc.gridx = 1; gbc.gridwidth = 3;
 		
         textFieldProvider = new JTextField();
         textFieldProvider.setFont(fieldFont);
@@ -145,14 +158,14 @@ public class AddExpensePanel extends JPanel {
 		if(!type.toLowerCase().equals("bill")){	// Hide location for bill
 			
 			// Label & field for location
-			gbc.gridx = 0; gbc.gridy++;
+			gbc.gridx = 0; gbc.gridy++; gbc.gridwidth = 1;
 			
 			JLabel lblLocation = new JLabel("Location");
 			lblLocation.setFont(lblFont);
 			lblLocation.setPreferredSize(lblSize);
 			this.add(lblLocation, gbc);
 
-			gbc.gridx = 1;
+			gbc.gridx = 1; gbc.gridwidth = 3;
 	        
 	        textFieldLocation = new JTextField();
 	        textFieldLocation.setFont(fieldFont);
@@ -162,14 +175,14 @@ public class AddExpensePanel extends JPanel {
 		}
 		
 		// Label & fields for amount
-		gbc.gridx = 0; gbc.gridy++;
+		gbc.gridx = 0; gbc.gridy++; gbc.gridwidth = 1;
 		
 		JLabel lblAmount = new JLabel("Amount");
 		lblAmount.setFont(lblFont);
 		lblAmount.setPreferredSize(lblSize);
 		this.add(lblAmount, gbc);
-		
-		gbc.gridx = 1;
+
+		gbc.gridx = 1; gbc.gridwidth = 3;
         
         textFieldAmount = new JTextField();
         textFieldAmount.setFont(fieldFont);
@@ -179,30 +192,30 @@ public class AddExpensePanel extends JPanel {
 
 		if(!type.toLowerCase().equals("bill")) {	// Hide date & time for bill
 			// Label & field for date
-			gbc.gridx = 0; gbc.gridy++;
+			gbc.gridx = 0; gbc.gridy++; gbc.gridwidth = 1;
 			
 			JLabel lblDate = new JLabel("Date");
 			lblDate.setFont(lblFont);
 			lblDate.setPreferredSize(lblSize);
 			this.add(lblDate, gbc);
 			
-			gbc.gridx = 1;
+			gbc.gridx = 1; gbc.gridwidth = 1;
 			
 			chooserDate = new JDateChooser();
 			chooserDate.setFont(fieldFont);
-			chooserDate.setPreferredSize(fieldSize);
+			chooserDate.setPreferredSize(fieldSizeSM);
 			this.add(chooserDate, gbc);
 			// end...
 			
 			// Label & field for time
-			gbc.gridx = 2;
+			gbc.gridx = 2; gbc.gridwidth = 1;
 			
 			JLabel lblTime = new JLabel("Time");
 			lblTime.setFont(lblFont);
 			lblTime.setPreferredSize(lblSizeSM);
 			this.add(lblTime, gbc);
 			
-			gbc.gridx = 3;
+			gbc.gridx = 3; gbc.gridwidth = 1;
 			
 			Calendar calendar = Calendar.getInstance();
 			calendar.set(Calendar.HOUR_OF_DAY, 24); 	// 24 == 12 PM == 00:00:00
@@ -228,14 +241,14 @@ public class AddExpensePanel extends JPanel {
 		
 		if(type.toLowerCase().equals("bill")) {	// Show recurence only for bill
 			// Label & fields for interval or recurence
-			gbc.gridx = 0; gbc.gridy++;
+			gbc.gridx = 0; gbc.gridy++; gbc.gridwidth = 1;
 			
 			JLabel lblInterval = new JLabel("Recurrence");
 			lblInterval.setFont(lblFont);
 			lblInterval.setPreferredSize(lblSize);
 			this.add(lblInterval, gbc);
-			
-			gbc.gridx = 1;
+
+			gbc.gridx = 1; gbc.gridwidth = 3;
 	        
 			selectInterval = new JComboBox<String>();
 			selectInterval.setModel(new DefaultComboBoxModel<String>(new String[] {"Weekly", "Monthly", "Annually"}));
@@ -246,31 +259,31 @@ public class AddExpensePanel extends JPanel {
 		}
 		
 		// Label & fields for account type
-		gbc.gridx = 0; gbc.gridy++;
+		gbc.gridx = 0; gbc.gridy++; gbc.gridwidth = 1;
 		
 		JLabel lblMode = new JLabel("Pay by");
 		lblMode.setFont(lblFont);
 		lblMode.setPreferredSize(lblSize);
 		this.add(lblMode, gbc);
 		
-		gbc.gridx = 1;
+		gbc.gridx = 1; gbc.gridwidth = 1;
         
 		selectMode = new JComboBox<String>();
 		selectMode.setModel(new DefaultComboBoxModel<String>(new String[] {"Credit Card", "Cash", "Debit"}));
 		selectMode.setFont(lblFont);
-		selectMode.setPreferredSize(fieldSize);
+		selectMode.setPreferredSize(fieldSizeSM);
 		this.add(selectMode, gbc);
 		// end ...
 		
 		// Label & field for status
-		gbc.gridx = 2;
+		gbc.gridx = 2; gbc.gridwidth = 1;
 		
 		final JLabel lblStatus = new JLabel("Status");
 		lblStatus.setFont(lblFont);
 		lblStatus.setPreferredSize(lblSizeSM);
 		this.add(lblStatus, gbc);
 		
-		gbc.gridx = 3; 
+		gbc.gridx = 3; gbc.gridwidth = 1;
         
 		selectStatus = new JComboBox<String>();
 		selectStatus.setModel(new DefaultComboBoxModel<String>(new String[] {"Unpaid", "Paid"}));
@@ -280,34 +293,50 @@ public class AddExpensePanel extends JPanel {
 		// end...
 		
 		// Label & field for due date
-		gbc.gridx = 0; gbc.gridy++;
+		gbc.gridx = 0; gbc.gridy++;  gbc.gridwidth = 1;
 		
 		final JLabel lblDueDate = new JLabel("Due date");
 		lblDueDate.setFont(lblFont);
 		lblDueDate.setPreferredSize(lblSize);
 		this.add(lblDueDate, gbc);
 		
-		gbc.gridx = 1;
+		gbc.gridx = 1; gbc.gridwidth = 1;
 		
 		chooserDueDate = new JDateChooser();
 		chooserDueDate.setFont(fieldFont);
-		chooserDueDate.setPreferredSize(fieldSize);
+		chooserDueDate.setPreferredSize(fieldSizeSM);
 		this.add(chooserDueDate, gbc);
 		// end...
 		
 		// Empty panel for layout only
-		gbc.gridx = 0; gbc.gridy++;
+		gbc.gridx = 0; gbc.gridy++; gbc.gridwidth = 4;
 
 		final JPanel emptyPanel = new JPanel();
-		emptyPanel.setPreferredSize(new Dimension(110,32));
+		emptyPanel.setPreferredSize(new Dimension(165,32));
 		this.add(emptyPanel, gbc);
 
 		gbc.gridx = 0; gbc.gridy++; gbc.gridwidth = 4;
 
 		final JPanel emptyPanel2 = new JPanel();
-		emptyPanel2.setPreferredSize(new Dimension(555,32));
+		emptyPanel2.setPreferredSize(new Dimension(370,32));
 		emptyPanel2.setVisible(false);
 		this.add(emptyPanel2, gbc);
+		// end...
+		
+		// Buttons
+		gbc.gridx = 1; gbc.gridy++; gbc.gridwidth = 1;
+		
+		btnSave = new JButton("Save");
+		btnSave.setFont(fieldFont);
+		btnSave.setPreferredSize(fieldSizeSM);
+		this.add(btnSave, gbc);
+		
+		gbc.gridx = 2; gbc.gridwidth = 2;
+		
+		btnCancel = new JButton("Cancel");
+		btnCancel.setFont(fieldFont);
+		btnCancel.setPreferredSize(fieldSizeSM);
+		this.add(btnCancel, gbc);
 		// end...
         
         this.validate();

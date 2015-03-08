@@ -12,8 +12,8 @@ public class UsersLoginPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public JTextField txtFieldName;
-	public JPasswordField pwdFieldPwd;
+	private JTextField txtFieldName;
+	private JPasswordField pwdFieldPwd;
 	private JButton btnLogin;
 	private JButton btnShowSignup;
 	
@@ -97,6 +97,7 @@ public class UsersLoginPanel extends JPanel {
 	//*************************************************************************************************
 	//**************Getter and Setter methods for login and signup*************************************
 	//*************************************************************************************************
+	
 	/**
 	 * Get User Name
 	 * @return String

@@ -4,6 +4,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import views.*;
+
 public class ApplicationController {
 	
 	/**
@@ -32,7 +34,10 @@ public class ApplicationController {
 	public static void runApp(){
 
 		System.out.println("Log in:");
-		UsersController users = new UsersController();
-		users.login();
+		
+		UsersFrame usersFrame = new UsersFrame();
+		new UsersController(usersFrame);
+		
+		usersFrame.setVisible(true);
 	}
 }

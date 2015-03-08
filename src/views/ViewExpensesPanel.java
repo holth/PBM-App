@@ -16,7 +16,7 @@ public class ViewExpensesPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public JTable table;
+	private JTable table;
 	
 	public ViewExpensesPanel(String username) {
 		
@@ -69,6 +69,13 @@ public class ViewExpensesPanel extends JPanel {
 		scrollPane.setViewportView(table);
 		
 		this.validate();
+	}
+	
+	/// Getter methods ///
+	
+	public JTable getTable() {
+		
+		return table;
 	}
 	
 }

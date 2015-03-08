@@ -1,8 +1,9 @@
 package controllers;
 
-import java.awt.*;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.*;
 
 import models.*;
@@ -12,112 +13,78 @@ public class ExpensesController {
 	
 	private ExpensesFrame expensesFrame;
 	private ViewExpensesPanel viewExpensesPanel;
-	private AddExpensePanel addExpensePanel;
-	
-	private CardLayout cLayout = new CardLayout();
+	private AddExpensePanel purchaseExpensePanel;
+	private AddExpensePanel billExpensePanel;
 	
 	private String username;
-	private String expenseType = "unknown";
 	
 	/**
-	 * 
-	 * @param username, to load expenses data
+	 * Constructor
+	 * @param ExpensesFrame
 	 */
-	public ExpensesController(String username) {
+	public ExpensesController(ExpensesFrame expensesFrame) {
 		
-		this.username = username;
+		this.username = expensesFrame.getUsername();
 		
-		expensesFrame = new ExpensesFrame(); 						// load frame
-		expensesFrame.middlePanel.setLayout(cLayout);				// set layout to CardLayout
+		this.expensesFrame = expensesFrame;
+		this.viewExpensesPanel = expensesFrame.getExpensesPanel();
+		this.purchaseExpensePanel = expensesFrame.getPurchasePanel();
+		this.billExpensePanel = expensesFrame.getBillPanel();
 		
-		viewExpensesPanel = new ViewExpensesPanel(username);		// load view expenses
-		addExpensePanel = new AddExpensePanel(expenseType);			// load add expenses
-		
-		expensesFrame.middlePanel.add(viewExpensesPanel, "view"); 	// add view expenses to layout
-		expensesFrame.middlePanel.add(addExpensePanel, "add");		// add add expenses to layout
-		
+		this.listener();
 	}
 
 	public void viewExpenses() {
 		
-		expensesFrame.btnsForAddExpense.setVisible(false);	// hide buttons for add expense
-		expensesFrame.btnsForViewExpenses.setVisible(true);	// show buttons for view expenses
-		
-		cLayout.show(expensesFrame.middlePanel, "view");	// show view expenses layout
-		
-		/// Listener methods ///
-		
-		expensesFrame.filterExpenses(new ActionListener() { // on-click of filter
-			public void actionPerformed(ActionEvent e) {
-				// TODO:
-				// filter expenses by type, category, provider from the combobox
-				// reload 'ViewExpensesPanel' with new data
-			}
-		});
-		
-		expensesFrame.clearFilter(new ActionListener() { // on-click of clear filter
-			public void actionPerformed(ActionEvent e) {
-				// TODO:
-				// clear combobox for filters
-				// reload 'ViewExpensesPanel' with all data
-			}
-		});
-		
-		expensesFrame.addExpense(new ActionListener() { // on-click of add expense
-			public void actionPerformed(ActionEvent e) {
-				addExpense();
-				return;
-			}
-		});
-		
-		expensesFrame.updateStatus(new ActionListener() { // on-click of update status
-			public void actionPerformed(ActionEvent e) {
-				updateStatus();
-			}
-		});
-		
-		expensesFrame.deleteExpense(new ActionListener() { // on-click of delete
-			public void actionPerformed(ActionEvent e) {
-				deleteExpense();
-			}
-		});
-		
-		// need updateAll...
-		// need deleteAll...
+		expensesFrame.hideExpenseForm();
 	}
 	
 	public void addExpense() {
 		
-		expensesFrame.topPanel.setVisible(false);				// hide top panel
-		expensesFrame.btnsForViewExpenses.setVisible(false);	// hide buttons for view expenses
-		expensesFrame.btnsForAddExpense.setVisible(true);		// show buttons for add expense
+		JRadioButton radioPurchase = new JRadioButton("Purchase");
+		JRadioButton radioBill = new JRadioButton("Bill");
+		radioPurchase.setSelected(true);
 		
-		cLayout.show(expensesFrame.middlePanel, "add");			// show add expense layout
+		final ButtonGroup group = new ButtonGroup();
+        group.add(radioPurchase);
+        group.add(radioBill);
+        
+        JPanel panel = new JPanel();
+        panel.add(radioPurchase);
+        panel.add(radioBill);
 		
-		/// Listener methods ///
+		int selection = JOptionPane.showOptionDialog(null, panel, 
+				"Select Expense Type", JOptionPane.OK_CANCEL_OPTION, 
+				JOptionPane.QUESTION_MESSAGE, null, null, null);
 		
-		expensesFrame.viewExpenses(new ActionListener() { // on-click of view expense
-			public void actionPerformed(ActionEvent e) {
-				
-				expensesFrame.topPanel.setVisible(true);	// put back the top panel
-				viewExpenses();
-				return;
-			}
-		});
+		if(selection == JOptionPane.OK_OPTION)
+		{
+			boolean isPurchase = radioPurchase.isSelected();
+    		boolean isBill = radioBill.isSelected();
+    		if(isPurchase || isBill)
+    		{
+
+        		if(isBill)
+        		{
+        			expensesFrame.showAddBillForm();
+        		}
+        		else
+        		{
+        			expensesFrame.showAddPurchaseForm();
+        		}
+    		}
+		}
+	}
+	
+	public void saveExpense() {
 		
-		expensesFrame.saveExpense(new ActionListener() { // on-click of save
-			public void actionPerformed(ActionEvent e) {
-				// TODO:
-				// get value from fields, see 'Get method' section of 'AddExpensePanel.java'
-				// e.g. AddExpensePanel.getProvider()
-				// use Expense_BLL.addExpense() to add expense
-				// reload 'ViewExpensesPanel' with new data
-			}
-		});
+		JOptionPane.showMessageDialog(null, "To be implemented!");
+		expensesFrame.hideExpenseForm();
+		
 	}
 	
 	public void updateStatus() {
-		JTable table = viewExpensesPanel.table;
+		JTable table = viewExpensesPanel.getTable();
 
 		int row = table.getSelectedRow();	// get current selected row
 		
@@ -141,24 +108,24 @@ public class ExpensesController {
 			}
 											
 			try {
+				
 				Expense_BLL expense = new Expense_BLL();
 				expense.updateExpense(expenseID, "status", newstatus);
-				JOptionPane.showMessageDialog(null, "Expense has been changed!");
-				expensesFrame.middlePanel.remove(viewExpensesPanel);;
-				viewExpensesPanel = new ViewExpensesPanel(username);
-				expensesFrame.middlePanel.add(viewExpensesPanel, "view");
-				cLayout.show(expensesFrame.middlePanel, "view");
-				return;
+				
+				refreshData();
+				
+				System.out.println("Status has been changed to " + newstatus +".");
+				
+				JOptionPane.showMessageDialog(null, "Status has been changed to " + newstatus +".");
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-				return;
 			}
 		}
 	}
 	
 	public void deleteExpense() {
-		JTable table = viewExpensesPanel.table;
+		JTable table = viewExpensesPanel.getTable();
 
 		int row = table.getSelectedRow();	// get current selected row
 		
@@ -169,20 +136,82 @@ public class ExpensesController {
 			int expenseID = Integer.parseInt((String) table.getValueAt(row, 0));
 											
 			try {
+				
 				Expense_BLL expense = new Expense_BLL();
 				expense.deleteExpense(expenseID);
-				JOptionPane.showMessageDialog(null, "Expense has been deleted!");
-				expensesFrame.middlePanel.remove(viewExpensesPanel);
-				viewExpensesPanel = new ViewExpensesPanel(username);
-				expensesFrame.middlePanel.add(viewExpensesPanel, "view");
-				cLayout.show(expensesFrame.middlePanel, "view");
-				return;
+				
+				refreshData();
+				
+				System.out.println("Expense deleted successfully!");
+				
+				JOptionPane.showMessageDialog(null, "Expense deleted successfully!");
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
-				return;
 			}
 		}
 	}
 	
+	/**
+	 * Listen to buttons
+	 */
+	private void listener() {
+		
+		expensesFrame.addExpense(new ActionListener() { // on-click of add expense
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Add new expenses:");
+				addExpense();
+			}
+		});
+		
+		expensesFrame.updateStatus(new ActionListener() { // on-click of update status
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Update status:");
+				updateStatus();
+			}
+		});
+		
+		expensesFrame.deleteExpense(new ActionListener() { // on-click of delete
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Delete expenses?");
+				deleteExpense();
+			}
+		});
+		
+		billExpensePanel.save(new ActionListener() { // on-click of save
+			public void actionPerformed(ActionEvent e) {
+				saveExpense();
+			}
+		});
+		
+		billExpensePanel.cancel(new ActionListener() { // on-click of cancel
+			public void actionPerformed(ActionEvent e) {
+				viewExpenses();
+			}
+		});
+		
+		purchaseExpensePanel.save(new ActionListener() { // on-click of save
+			public void actionPerformed(ActionEvent e) {
+				saveExpense();
+			}
+		});
+		
+		purchaseExpensePanel.cancel(new ActionListener() { // on-click of cancel
+			public void actionPerformed(ActionEvent e) {
+				viewExpenses();
+			}
+		});
+		
+	}
+	
+	/**
+	 * Refresh data table
+	 */
+	private void refreshData() {
+		
+		viewExpensesPanel = new ViewExpensesPanel(username);
+		
+		expensesFrame.getMiddlePanel().removeAll();
+		expensesFrame.getMiddlePanel().add(viewExpensesPanel, BorderLayout.CENTER);
+		expensesFrame.getMiddlePanel().revalidate();
+	}
 }
