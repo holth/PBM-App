@@ -76,10 +76,75 @@ public class ExpensesController {
 		}
 	}
 	
-	public void saveExpense() {
+	public void saveExpense(PurchaseExpense expense) {
 		
-		JOptionPane.showMessageDialog(null, "To be implemented!");
-		expensesFrame.hideExpenseForm();
+		String accountType = expense.paymentMode;
+		String providerName = expense.providerName;
+		String providerType = expense.expenseType;
+		String address = expense.providerAddress;
+		Float amount = expense.amount;
+		String type = expense.expenseType;
+		String status = expense.status;
+		String duration = "";
+		String dateTime = expense.date;
+		String dueDate = expense.dueDate;
+		
+		
+		try {
+			Expense_BLL expenseModel = new Expense_BLL();
+			
+			boolean success = expenseModel.addExpense(username, accountType,
+					providerName, providerType, address,
+					amount, type, status, duration,
+					dateTime, dueDate);
+			
+			if(success) {
+				// purchaseExpensePanel.clearAllFields();
+				expensesFrame.hideExpenseForm();
+				refreshData();
+				JOptionPane.showMessageDialog(null, "Expense saved successfully!");
+			}
+			
+		} catch(Exception e) {
+			JOptionPane.showMessageDialog(null, "Unable to save expense!");
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void saveExpense(BillExpense expense) {
+		
+		String accountType = expense.paymentMode;
+		String providerName = expense.providerName;
+		String providerType = expense.expenseType;
+		String address = "";
+		Float amount = expense.amount;
+		String type = expense.expenseType;
+		String status = expense.status;
+		String duration = expense.interval;
+		String dateTime = "";
+		String dueDate = expense.dueDate;
+		
+		
+		try {
+			Expense_BLL expenseModel = new Expense_BLL();
+			
+			boolean success = expenseModel.addExpense(username, accountType,
+					providerName, providerType, address,
+					amount, type, status, duration,
+					dateTime, dueDate);
+			
+			if(success) {
+				// billExpensePanel.clearAllFields();
+				expensesFrame.hideExpenseForm();
+				refreshData();
+				JOptionPane.showMessageDialog(null, "Expense saved successfully!");
+			}
+			
+		} catch(Exception e) {
+			JOptionPane.showMessageDialog(null, "Unable to save expense!");
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -179,7 +244,13 @@ public class ExpensesController {
 		
 		billExpensePanel.save(new ActionListener() { // on-click of save
 			public void actionPerformed(ActionEvent e) {
-				saveExpense();
+				
+				BillExpense bill = new BillExpense(billExpensePanel.getProvider(),
+						"", billExpensePanel.getAmount(),
+						billExpensePanel.getInterval(), billExpensePanel.getMode(),
+						billExpensePanel.getStatus(), billExpensePanel.getDueDate());
+				
+				saveExpense(bill);
 			}
 		});
 		
@@ -191,7 +262,13 @@ public class ExpensesController {
 		
 		purchaseExpensePanel.save(new ActionListener() { // on-click of save
 			public void actionPerformed(ActionEvent e) {
-				saveExpense();
+				
+				PurchaseExpense purchase = new PurchaseExpense(purchaseExpensePanel.getProvider(),
+						purchaseExpensePanel.getAddress(), purchaseExpensePanel.getDate(), 
+						purchaseExpensePanel.getAmount(), purchaseExpensePanel.getMode(),
+						purchaseExpensePanel.getStatus(), purchaseExpensePanel.getDueDate());
+				
+				saveExpense(purchase);
 			}
 		});
 		

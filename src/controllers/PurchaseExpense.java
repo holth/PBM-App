@@ -11,7 +11,7 @@ public class PurchaseExpense implements Expense
 	public String providerName;
 	public String providerAddress;
 	public String date;
-	public String time;
+	//public String time;
 	
 	public Float amount;
 	
@@ -19,14 +19,14 @@ public class PurchaseExpense implements Expense
 	public String status;			//Paid or Unpaid
 	public String dueDate;
 	
-	public PurchaseExpense(String pname, String paddress, String pdate, String ptime, 
+	public PurchaseExpense(String pname, String paddress, String pdate, /*String ptime,*/ 
 			Float pamount, String pmode, String pstatus, String pdue_date)
 	{
 		this.expenseType = "Purchase";
 		this.providerName = pname;
 		this.providerAddress = paddress;
 		this.date = pdate;
-		this.time = ptime;
+		//this.time = ptime;
 		this.amount = pamount;
 		this.paymentMode = pmode;
 		this.status = pstatus;
@@ -38,7 +38,7 @@ public class PurchaseExpense implements Expense
 		return "Expense Type: " + this.expenseType + " | " +
 				"Provider Name: " + this.providerName + " | " +
 				"Provider Address: " + this.providerAddress + " | " +
-				"Data&Time: " + this.date + " " + this.time + " | " +
+				"Data&Time: " + this.date + /*" " + this.time + */" | " +
 				"Amount: " + this.amount + " | " +
 				"Payment Mode: " + this.paymentMode + " | " +
 				"Status: " + this.status + " | " +

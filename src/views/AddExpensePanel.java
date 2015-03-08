@@ -3,6 +3,7 @@ package views;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import javax.swing.*;
@@ -52,19 +53,19 @@ public class AddExpensePanel extends JPanel {
 	/// Get methods ///
 	
 	public String getCategory() {
-		return null; // TODO: return value of selectCategory
+		return selectCategory.getSelectedItem().toString();
 	}
 	
 	public String getMode() {
-		return null; // TODO: return value of selectCategory
+		return selectMode.getSelectedItem().toString();
 	}
 	
 	public String getStatus() {
-		return null; // TODO: return value of selectCategory
+		return selectStatus.getSelectedItem().toString();
 	}
 	
 	public String getInterval() {
-		return null; // TODO: return value of selectCategory
+		return selectInterval.getSelectedItem().toString();
 	}
 	
 	public String getProvider() {
@@ -80,11 +81,40 @@ public class AddExpensePanel extends JPanel {
 	}
 	
 	public String getDate() {
-		return chooserDate.getDateFormatString();
+		String date;
+		String time;
+		
+		if(chooserDate.getDate() != null)
+			date = new SimpleDateFormat("yyyy-MM-dd").format(chooserDueDate.getDate());
+		else
+			date = "";
+		
+		if(spinner.getValue() != null)
+			time = new SimpleDateFormat("h:mm a").format(spinner.getValue());
+		else
+			time = "";
+		
+		return date + " " + time;
 	}
 	
 	public String getDueDate() {
-		return chooserDueDate.getDateFormatString();
+		if(chooserDueDate.getDate() != null)
+			return new SimpleDateFormat("yyyy-MM-dd").format(chooserDueDate.getDate());
+		else
+			return "";
+	}
+	
+	/// Set methods ///
+	
+	public void clearAllFields() {
+
+		textFieldProvider.setText("");
+		textFieldLocation.setText("");
+		textFieldAmount.setText("");;
+		selectCategory.setSelectedIndex(0);
+		selectMode.setSelectedIndex(0);
+		selectStatus.setSelectedIndex(0);
+		selectInterval.setSelectedIndex(0);
 	}
 	
 	/// Design methods ///
