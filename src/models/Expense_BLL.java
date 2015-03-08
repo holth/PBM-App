@@ -53,7 +53,7 @@ public class Expense_BLL {
 
 	public boolean addExpense(String username, String accountType,
 			String providerName, String providerType, String address,
-			float amount, String type, String status, String duration,
+			float amount, String category, String status, String duration,
 			String dateTime, String dueDate) throws Exception {
 		int providerId = 0;
 		int userId = this.user_service.getUserIdByUsername(username);
@@ -71,7 +71,7 @@ public class Expense_BLL {
 		}
 		return this.expense_service.makeTransaction(providerId, accountType
 				.toUpperCase().trim(), accountId, address.toUpperCase().trim(),
-				amount, type.toUpperCase().trim(), status.toUpperCase().trim(),
+				amount, category.toUpperCase().trim(), status.toUpperCase().trim(),
 				duration, dateTime, dueDate);
 	}
 }

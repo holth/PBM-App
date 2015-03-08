@@ -231,17 +231,17 @@ public class Expense_Service {
 	 * @throws Exception
 	 */
 	public boolean makeTransaction(int providerId, String accountType,
-			int accountId, String address, float amount, String type,
+			int accountId, String address, float amount, String category,
 			String status, String duration, String dateTime, String dueDate)
 			throws Exception {
-		String query = "INSERT INTO Transactions(account_id,provider_id,amount,type,status,time,due_Date,duration) VALUES("
+		String query = "INSERT INTO Transactions(account_id,provider_id,amount,category,status,time,due_Date,duration) VALUES("
 				+ accountId
 				+ ","
 				+ providerId
 				+ ","
 				+ amount
 				+ ",\'"
-				+ type
+				+ category
 				+ "\',\'"
 				+ status
 				+ "\',\'"
@@ -263,12 +263,12 @@ public class Expense_Service {
 
 	public boolean updateTransaction(int transactionId, int providerId,
 			int accountId, String accountType, String providerName,
-			String providerType, String address, float amount, String type,
+			String providerType, String address, float amount, String category,
 			String status, String duration, String dateTime, String dueDate)
 			throws Exception {
 		String query = "UPDATE Transactions " + "SET account_id = " + accountId
 				+ ", " + "provider_id=" + providerId + ", " + "type= \'"
-				+ type.toUpperCase().trim() + "\' , " + "status= \'"
+				+ category.toUpperCase().trim() + "\' , " + "status= \'"
 				+ status.toUpperCase().trim() + " \' ," + "amount=" + amount
 				+ " ," + "time= \'" + dateTime.toUpperCase().trim() + "\' ,"
 				+ "duration=\'" + duration.toUpperCase().trim() + "\' , "

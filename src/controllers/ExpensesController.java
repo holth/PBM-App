@@ -200,7 +200,7 @@ public class ExpensesController {
 				String type = "Bill";
 				String category = billExpensePanel.getCategory();
 				String bname = billExpensePanel.getProvider();
-				String baddress = billExpensePanel.getAddress();
+				String baddress = ""; // billExpensePanel.getAddress();
 				String bdate = "N/A";
 				String bamount = billExpensePanel.getAmount();
 				String binterval = billExpensePanel.getInterval();
@@ -216,7 +216,7 @@ public class ExpensesController {
 				if(bstatus == "Paid")
 					bdue_date = "NA";
 				if(bname.equals("") || bamount.equals("") || bmode.equals("") || bstatus.equals("")|| bdue_date.equals("") ||
-						binterval.equals("") ||baddress.equals(""))
+						binterval.equals(""))
 					errormessages("ERROR: Bill Fields are empty!");
 				else if(!isNumeric(bamount)){
 					errormessages("ERROR: Amount should be numeric!");
