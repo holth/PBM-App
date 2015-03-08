@@ -76,8 +76,8 @@ public class AddExpensePanel extends JPanel {
 		return textFieldLocation.getText();
 	}
 	
-	public Float getAmount() {
-		return Float.valueOf(textFieldAmount.getText());
+	public String getAmount() {
+		return textFieldAmount.getText();
 	}
 	
 	public String getDate() {
@@ -85,7 +85,7 @@ public class AddExpensePanel extends JPanel {
 		String time;
 		
 		if(chooserDate.getDate() != null)
-			date = new SimpleDateFormat("yyyy-MM-dd").format(chooserDueDate.getDate());
+			date = new SimpleDateFormat("yyyy-MM-dd").format(chooserDate.getDate());
 		else
 			date = "";
 		
