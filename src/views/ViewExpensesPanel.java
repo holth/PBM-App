@@ -31,6 +31,7 @@ public class ViewExpensesPanel extends JPanel {
 		String[] colNames = {
 				"Expense ID",
 				"Expense Type",
+				"Category",
                 "Provider Name",
                 "Location",
                 "Amount",
@@ -46,10 +47,10 @@ public class ViewExpensesPanel extends JPanel {
 		{
 			Expense_BLL exp = new Expense_BLL();
 			ArrayList<ArrayList<String>> expenses = exp.viewExpenseByUsername(username);
-			String[][] data = new String[expenses.size()][10];
+			String[][] data = new String[expenses.size()][11];
 			for(int i = 0; i < expenses.size(); ++i)
 			{
-				for(int j = 0; j < 10; ++j)
+				for(int j = 0; j < 11; ++j)
 				{
 					data[i][j] = expenses.get(i).get(j);
 				}

@@ -32,7 +32,7 @@ public class User_Service {
 			+ " id INTEGER PRIMARY KEY,"
 			+ " account_id INT NOT NULL,"
 			+ " provider_id INT NOT NULL,"
-			+ " type VARCHAR(10) NOT NULL,"
+			+ " category VARCHAR(50) NOT NULL,"
 			+ " status VARCHAR(10) NOT NULL,"
 			+ " amount float DEFAULT 0.0,"
 			+ " time VARCHAR(30) NOT NULL,"
@@ -42,7 +42,10 @@ public class User_Service {
 			+ " ON DELETE CASCADE "
 			+ " ON UPDATE CASCADE,"
 			+ " FOREIGN KEY (provider_id) REFERENCES Provider(id) "
-			+ " ON DELETE CASCADE " + " ON UPDATE CASCADE);";
+			+ " ON DELETE CASCADE " + " ON UPDATE CASCADE,"
+			+ " FOREIGN KEY(category_id) REFERENCES Category(id) "
+			+ " ON UPDATE CASCADE);";
+	
 	public User_Service() throws Exception{
 		Class.forName("org.sqlite.JDBC");
 		con = DriverManager.getConnection("jdbc:sqlite:test.db");

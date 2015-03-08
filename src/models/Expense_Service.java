@@ -54,6 +54,27 @@ public class Expense_Service {
 		throw new Exception("Reading error");
 	}
 
+	/**
+	 * For displaying provider type
+	 * 
+	 * @param providerId
+	 * @return
+	 * @throws Exception
+	 */
+	public String getProviderTypeByProviderId(int providerId) throws Exception {
+		Class.forName("org.sqlite.JDBC");
+		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		Statement select = con.createStatement();
+		String query = "SELECT type FROM Provider WHERE id=" + providerId + ";";
+		ResultSet result = select.executeQuery(query);
+		if (result.next()) {
+			String name = result.getString("type");
+			result.close();
+			return name;
+		}
+		throw new Exception("Reading error");
+	}
+
 	public ArrayList<ArrayList<String>> getTransactionByUsernameAndType(
 			int userId, String type) throws Exception {
 		Class.forName("org.sqlite.JDBC");
@@ -72,6 +93,8 @@ public class Expense_Service {
 			int providerId = result.getInt("provider_id");
 			ArrayList<String> sub = new ArrayList<String>();
 			sub.add(result.getString("id"));
+			sub.add(type.toUpperCase());
+			sub.add(result.getString("category"));
 			sub.add(this.capitalizeWords(this.getProviderNameByProviderId(providerId)));
 			sub.add(this.capitalizeWords(this.getProviderAddressByProviderId(providerId)));
 			sub.add(result.getString("amount"));
@@ -110,7 +133,8 @@ public class Expense_Service {
 			int providerId = result.getInt("provider_id");
 			ArrayList<String> sub = new ArrayList<String>();
 			sub.add(result.getString("id"));
-			sub.add(result.getString("type"));
+			sub.add(this.capitalizeWords(this.getProviderTypeByProviderId(providerId)));
+			sub.add(result.getString("category"));
 			sub.add(this.capitalizeWords(this.getProviderNameByProviderId(providerId)));
 			sub.add(this.capitalizeWords(this.getProviderAddressByProviderId(providerId)));
 			sub.add(result.getString("amount"));
