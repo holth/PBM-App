@@ -97,6 +97,7 @@ public class UsersLoginPanel extends JPanel {
 	//*************************************************************************************************
 	//**************Getter and Setter methods for login and signup*************************************
 	//*************************************************************************************************
+
 	
 	/**
 	 * Get User Name
@@ -105,6 +106,7 @@ public class UsersLoginPanel extends JPanel {
 	public String getUsername(){
 		return txtFieldName.getText();
 	}
+
 	/**
 	 * Get the Password
 	 * @return char[]
@@ -112,4 +114,5 @@ public class UsersLoginPanel extends JPanel {
 	public char[] getPassword(){
 		return pwdFieldPwd.getPassword();
 	}
+	
 }

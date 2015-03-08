@@ -105,6 +105,7 @@ public class UsersSignupPanel extends JPanel {
 	public String getUsername(){
 		return txtFieldName.getText();
 	}
+	
 	/**
 	 * Get the Password
 	 * @return char[]
@@ -112,6 +113,7 @@ public class UsersSignupPanel extends JPanel {
 	public char[] getPwd(){
 		return pwdFieldPwd.getPassword();
 	}
+	
 	/**
 	 * Get the Password confirmation
 	 * @return char[]
