@@ -16,7 +16,7 @@ public class BillExpense implements Expense
 	
 	public String paymentMode;		//Cash, Debit or Credit card
 	public String status;			//Paid or Unpaid
-	public String dutDate;
+	public String dueDate;
 	
 	public BillExpense(String bname, String baddress, Float bamount, String binterval, 
 			String bmode, String bstatus, String bdue_date)
@@ -28,7 +28,7 @@ public class BillExpense implements Expense
 		this.interval = binterval;
 		this.paymentMode = bmode;
 		this.status = bstatus;
-		this.dutDate = bdue_date;
+		this.dueDate = bdue_date;
 	}
 	
 	public String toString()
@@ -40,6 +40,6 @@ public class BillExpense implements Expense
 				"Interval: " + this.interval + " | " +
 				"Payment Mode: " + this.paymentMode + " | " +
 				"Status: " + this.status + " | " +
-				"Due Date: " + this.dutDate;
+				"Due Date: " + this.dueDate;
 	}
 }

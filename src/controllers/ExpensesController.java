@@ -64,13 +64,13 @@ public class ExpensesController {
     		if(isPurchase || isBill)
     		{
 
-        		if(isBill)
+        		if(isPurchase)
         		{
-        			expensesFrame.showAddBillForm();
+        			expensesFrame.showAddPurchaseForm();
         		}
         		else
         		{
-        			expensesFrame.showAddPurchaseForm();
+        			expensesFrame.showAddBillForm();
         		}
     		}
 		}

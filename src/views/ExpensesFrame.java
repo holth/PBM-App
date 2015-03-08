@@ -106,14 +106,14 @@ public class ExpensesFrame extends JFrame {
 	
 	public void showAddPurchaseForm() {
 		
-		rightPanel.setVisible(true);
 		cLayout.show(rightPanel, "add purchase");
+		rightPanel.setVisible(true);
 	}
 	
 	public void showAddBillForm() {
 		
-		rightPanel.setVisible(true);
 		cLayout.show(rightPanel, "add bill");
+		rightPanel.setVisible(true);
 	}
 	
 	public void refreshExpenses() {

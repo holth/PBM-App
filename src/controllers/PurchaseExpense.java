@@ -17,7 +17,7 @@ public class PurchaseExpense implements Expense
 	
 	public String paymentMode;		//Cash, Debit or Credit card
 	public String status;			//Paid or Unpaid
-	public String dutDate;
+	public String dueDate;
 	
 	public PurchaseExpense(String pname, String paddress, String pdate, String ptime, 
 			Float pamount, String pmode, String pstatus, String pdue_date)
@@ -30,7 +30,7 @@ public class PurchaseExpense implements Expense
 		this.amount = pamount;
 		this.paymentMode = pmode;
 		this.status = pstatus;
-		this.dutDate = pdue_date;
+		this.dueDate = pdue_date;
 	}
 	
 	public String toString()
@@ -42,7 +42,7 @@ public class PurchaseExpense implements Expense
 				"Amount: " + this.amount + " | " +
 				"Payment Mode: " + this.paymentMode + " | " +
 				"Status: " + this.status + " | " +
-				"Due Date: " + this.dutDate;
+				"Due Date: " + this.dueDate;
 	}
 
 }
