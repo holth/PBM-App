@@ -122,7 +122,8 @@ public class AddExpensePanel extends JPanel {
 		}
 		textFieldAmount.setText("");;
 		// selectCategory.setSelectedIndex(0);
-		selectMode.setSelectedIndex(0);
+		if(selectMode.getSelectedItem().toString().equals("CREDIT"))
+			selectMode.setSelectedIndex(0);
 		selectStatus.setSelectedIndex(0);
 		if(type.toLowerCase().equals("bill"))
 			selectInterval.setSelectedIndex(0);
