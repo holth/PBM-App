@@ -86,13 +86,18 @@ public class ExpensesController {
 					amount, category, status, interval, date, due_date);
 			
 			if(success) {
-				// purchaseExpensePanel.clearAllFields();
+				if(type.equals("Purchase"))
+					purchaseExpensePanel.clearAllFields();
+				else
+					billExpensePanel.clearAllFields();
 				expensesFrame.hideExpenseForm();
 				refreshData();
+				System.out.println("Expense save successfully!");
 				JOptionPane.showMessageDialog(null, "Expense saved successfully!");
 			}
 			
 		} catch(Exception e) {
+			System.out.println("Unable to save expense!");
 			JOptionPane.showMessageDialog(null, "Unable to save expense!");
 			e.printStackTrace();
 		}
@@ -200,8 +205,8 @@ public class ExpensesController {
 				String type = "Bill";
 				String category = billExpensePanel.getCategory();
 				String bname = billExpensePanel.getProvider();
-				String baddress = ""; // billExpensePanel.getAddress();
-				String bdate = "N/A";
+				String baddress = "NA";
+				String bdate = "NA";
 				String bamount = billExpensePanel.getAmount();
 				String binterval = billExpensePanel.getInterval();
 				String bmode = billExpensePanel.getMode();
@@ -215,7 +220,7 @@ public class ExpensesController {
 				}
 				if(bstatus == "Paid")
 					bdue_date = "NA";
-				if(bname.equals("") || bamount.equals("") || bmode.equals("") || bstatus.equals("")|| bdue_date.equals("") ||
+				if(category.equals("") || bname.equals("") || bamount.equals("") || bmode.equals("") || bstatus.equals("")|| bdue_date.equals("") ||
 						binterval.equals(""))
 					errormessages("ERROR: Bill Fields are empty!");
 				else if(!isNumeric(bamount)){
@@ -258,7 +263,7 @@ public class ExpensesController {
 				}
 				if(pstatus == "Paid")
 					pdue_date = "NA";
-				if(pname.equals("") ||paddress.equals("") || pdate.equals("") ||pamount.equals("") ||pmode.equals("") 
+				if(category.equals("") || pname.equals("") ||paddress.equals("") || pdate.equals("") ||pamount.equals("") ||pmode.equals("") 
 						|| pstatus.equals("") || pdue_date.equals(""))
 				{
 					errormessages("ERROR: Purchase Fields are empty!");

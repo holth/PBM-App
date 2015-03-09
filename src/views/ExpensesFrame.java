@@ -15,6 +15,7 @@ public class ExpensesFrame extends JFrame {
 	private JPanel topPanel;
 	private JPanel middlePanel;
 	private JPanel rightPanel;
+	private JPanel bottomPanel;
 	
 	private ViewExpensesPanel expensesPanel;
 	private AddExpensePanel purchaseExpensePanel = new AddExpensePanel("purchase");
@@ -54,8 +55,10 @@ public class ExpensesFrame extends JFrame {
 		
 		loadRightPanel();
 		mainPanel.add(rightPanel, BorderLayout.EAST);
-		
 		rightPanel.setVisible(false);
+		
+		loadBottomPanel();
+		mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 		
 	}
 	
@@ -126,23 +129,7 @@ public class ExpensesFrame extends JFrame {
         topPanel = new JPanel();
         topPanel.setLayout(new BorderLayout(0,0));
         topPanel.setBackground(new Color(224, 224, 224));
-        topPanel.setPreferredSize(new Dimension(0, 46));
-        
-        JPanel btnsPanel = new JPanel();
-        btnsPanel.setOpaque(false);
-        topPanel.add(btnsPanel, BorderLayout.WEST);
-        
-		btnAddExpense = new JButton("Add expense  ", new ImageIcon("assets/appbar.add.png"));
-		btnAddExpense.setFont(new Font("Tacoma", 0, 13));
-		btnsPanel.add(btnAddExpense);
-        
-		btnUpdateStatus = new JButton("Update status  ", new ImageIcon("assets/appbar.draw.pencil.png"));
-		btnUpdateStatus.setFont(new Font("Tacoma", 0, 13));
-		btnsPanel.add(btnUpdateStatus);
-        
-		btnDeleteExpense = new JButton("Delete expense  ", new ImageIcon("assets/appbar.close.png"));
-		btnDeleteExpense.setFont(new Font("Tacoma", 0, 13));
-		btnsPanel.add(btnDeleteExpense);
+        topPanel.setPreferredSize(new Dimension(0, 40));
         
         JLabel lblUsername = new JLabel("Hi, " + username);
         lblUsername.setHorizontalAlignment(SwingConstants.CENTER);
@@ -165,6 +152,31 @@ public class ExpensesFrame extends JFrame {
 		rightPanel.setLayout(cLayout);	// set middle panel as container
 		rightPanel.add(purchaseExpensePanel, "add purchase");
 		rightPanel.add(billExpensePanel, "add bill");
+	}
+	
+	private void loadBottomPanel() {
+		
+        bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BorderLayout(0,0));
+        bottomPanel.setBackground(new Color(224, 224, 224));
+        bottomPanel.setPreferredSize(new Dimension(0, 48));
+        
+        JPanel btnsPanel = new JPanel();
+        btnsPanel.setOpaque(false);
+        bottomPanel.add(btnsPanel, BorderLayout.WEST);
+        
+		btnAddExpense = new JButton("Add expense  ", new ImageIcon("assets/appbar.add.png"));
+		btnAddExpense.setFont(new Font("Tacoma", 0, 13));
+		btnsPanel.add(btnAddExpense);
+        
+		btnUpdateStatus = new JButton("Update status  ", new ImageIcon("assets/appbar.draw.pencil.png"));
+		btnUpdateStatus.setFont(new Font("Tacoma", 0, 13));
+		btnsPanel.add(btnUpdateStatus);
+        
+		btnDeleteExpense = new JButton("Delete expense  ", new ImageIcon("assets/appbar.close.png"));
+		btnDeleteExpense.setFont(new Font("Tacoma", 0, 13));
+		btnsPanel.add(btnDeleteExpense);
+		
 	}
 	
 }

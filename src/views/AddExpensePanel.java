@@ -18,6 +18,7 @@ public class AddExpensePanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private JTextField textFieldCategory;
 	private JTextField textFieldProvider;
 	private JTextField textFieldLocation;
 	private JTextField textFieldAmount;
@@ -31,12 +32,15 @@ public class AddExpensePanel extends JPanel {
 	
 	private JButton btnSave;
 	private JButton btnCancel;
+	
+	private String type;
 
 	/**
 	 * 
 	 * @param type, 'PURCHASE' or 'BILL', to use to display fields
 	 */
 	public AddExpensePanel(String type) {
+		this.type = type;
 		loadExpenseFields(type);
 	}
 	
@@ -53,7 +57,8 @@ public class AddExpensePanel extends JPanel {
 	/// Get methods ///
 	
 	public String getCategory() {
-		return selectCategory.getSelectedItem().toString();
+		// return selectCategory.getSelectedItem().toString();
+		return textFieldCategory.getText();
 	}
 	
 	public String getMode() {
@@ -108,13 +113,20 @@ public class AddExpensePanel extends JPanel {
 	
 	public void clearAllFields() {
 
+		textFieldCategory.setText("");
 		textFieldProvider.setText("");
-		textFieldLocation.setText("");
+		if(type.toLowerCase().equals("purchase")){
+			textFieldLocation.setText("");
+			chooserDate.setCalendar(null);
+			
+		}
 		textFieldAmount.setText("");;
-		selectCategory.setSelectedIndex(0);
+		// selectCategory.setSelectedIndex(0);
 		selectMode.setSelectedIndex(0);
 		selectStatus.setSelectedIndex(0);
-		selectInterval.setSelectedIndex(0);
+		if(type.toLowerCase().equals("bill"))
+			selectInterval.setSelectedIndex(0);
+		chooserDueDate.setCalendar(null);
 	}
 	
 	/// Design methods ///
@@ -161,11 +173,18 @@ public class AddExpensePanel extends JPanel {
 
 		gbc.gridx = 1; gbc.gridwidth = 3;
         
+		/*
 		selectCategory = new JComboBox<String>();
 		selectCategory.setModel(new DefaultComboBoxModel<String>(new String[] {"Food", "Entertainment", "Insurance"}));
 		selectCategory.setFont(lblFont);
 		selectCategory.setPreferredSize(fieldSize);
 		this.add(selectCategory, gbc);
+		*/
+		
+        textFieldCategory = new JTextField();
+        textFieldCategory.setFont(fieldFont);
+        textFieldCategory.setPreferredSize(fieldSize);
+		this.add(textFieldCategory, gbc);
 		// end...
 		
 		// Label & fields for provider
