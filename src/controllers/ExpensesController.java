@@ -110,8 +110,8 @@ public class ExpensesController {
 					"Please select the expense you want to update!", "ERROR", JOptionPane.ERROR_MESSAGE);
 		else {
 			int expenseID = Integer.parseInt((String) table.getValueAt(row, 0));
-			String mode = (String) table.getValueAt(row, 7);
-			String oldstatus = (String) table.getValueAt(row, 8);
+			String mode = (String) table.getValueAt(row, 8);
+			String oldstatus = (String) table.getValueAt(row, 9);
 			String newstatus;
 			
 			if(oldstatus.equalsIgnoreCase("Paid"))
