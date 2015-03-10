@@ -17,8 +17,6 @@ public class ViewExpensesPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	// private JTable table;
-	// private DataTable dataTable;
 	private JXTreeTable table;
 	
 	public ViewExpensesPanel(String username, String category, String expenseType, String status) {
