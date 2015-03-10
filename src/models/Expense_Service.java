@@ -92,9 +92,9 @@ public class Expense_Service {
 		while (result.next()) {
 			int providerId = result.getInt("provider_id");
 			ArrayList<String> sub = new ArrayList<String>();
+			sub.add(result.getString("category"));
 			sub.add(result.getString("id"));
 			sub.add(type.toUpperCase());
-			sub.add(result.getString("category"));
 			sub.add(this.capitalizeWords(this.getProviderNameByProviderId(providerId)));
 			sub.add(this.capitalizeWords(this.getProviderAddressByProviderId(providerId)));
 			sub.add(result.getString("amount"));
@@ -123,7 +123,8 @@ public class Expense_Service {
 		con = DriverManager.getConnection("jdbc:sqlite:test.db");
 		Statement select = con.createStatement();
 		String query = "SELECT * FROM Transactions WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id ="
-				+ userId + ");";
+				+ userId + ") "
+				+ "ORDER BY category;";
 		select = con.createStatement(ResultSet.TYPE_FORWARD_ONLY,
 				ResultSet.CONCUR_READ_ONLY);
 		ResultSet result = select.executeQuery(query);
@@ -132,9 +133,9 @@ public class Expense_Service {
 		while (result.next()) {
 			int providerId = result.getInt("provider_id");
 			ArrayList<String> sub = new ArrayList<String>();
+			sub.add(result.getString("category"));
 			sub.add(result.getString("id"));
 			sub.add(this.capitalizeWords(this.getProviderTypeByProviderId(providerId)));
-			sub.add(result.getString("category"));
 			sub.add(this.capitalizeWords(this.getProviderNameByProviderId(providerId)));
 			sub.add(this.capitalizeWords(this.getProviderAddressByProviderId(providerId)));
 			sub.add(result.getString("amount"));
@@ -149,6 +150,250 @@ public class Expense_Service {
 		}
 		con.close();
 		return arrayList;
+	}
+	
+	// to delete
+	public ArrayList<ArrayList<String>> getTransactionByUsernameAndCategories(int userId, ArrayList<String> categories)
+			throws Exception {
+		Class.forName("org.sqlite.JDBC");
+		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		Statement select = con.createStatement();
+		
+		String categoriesList = "";
+		for(int i = 0; i < categories.size(); i++) {
+			if(i == 0)
+				categoriesList += "\'" + categories.get(i) + "\'";
+			else
+				categoriesList += ",\'" + categories.get(i) + "\'";
+		}
+		
+		String query = "SELECT * FROM Transactions "
+				+ "WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id =" + userId + ") "
+				+ "AND category IN (" + categoriesList + ") "
+				+ "ORDER BY category;";
+		
+		select = con.createStatement(ResultSet.TYPE_FORWARD_ONLY,
+				ResultSet.CONCUR_READ_ONLY);
+		ResultSet result = select.executeQuery(query);
+		result = select.executeQuery(query);
+		ArrayList<ArrayList<String>> arrayList = new ArrayList<ArrayList<String>>();
+		while (result.next()) {
+			int providerId = result.getInt("provider_id");
+			ArrayList<String> sub = new ArrayList<String>();
+			sub.add(result.getString("category"));
+			sub.add(result.getString("id"));
+			sub.add(this.capitalizeWords(this.getProviderTypeByProviderId(providerId)));
+			sub.add(this.capitalizeWords(this.getProviderNameByProviderId(providerId)));
+			sub.add(this.capitalizeWords(this.getProviderAddressByProviderId(providerId)));
+			sub.add(result.getString("amount"));
+			sub.add(result.getString("time"));
+			sub.add(result.getString("duration"));
+			sub.add(this.account_service.getPaymentTypeByAccountId(result
+					.getInt("account_id")));
+			sub.add(result.getString("status"));
+			sub.add(result.getString("due_date"));
+
+			arrayList.add(sub);
+		}
+		con.close();
+		return arrayList;
+	}
+	
+	// NEW
+	public ArrayList<ArrayList<String>> getTransactionBy(
+			int userId, String category, String providerType, String expenseStatus)
+			throws Exception {
+		Class.forName("org.sqlite.JDBC");
+		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		Statement select = con.createStatement();
+		
+		String query = "SELECT * FROM Transactions "
+				+ "WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id =" + userId + ");";
+		
+		if(category.equalsIgnoreCase("all") 
+				&& providerType.equalsIgnoreCase("all") 
+					&& expenseStatus.equalsIgnoreCase("all")) {
+			
+			query = "SELECT * FROM Transactions "
+					+ "WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id =" + userId + ");";
+			
+		} else if(category.equalsIgnoreCase("all") 
+					&& !providerType.equalsIgnoreCase("all") 
+						&& expenseStatus.equalsIgnoreCase("all")) {
+			
+			query = "SELECT * FROM Transactions "
+					+ "WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id =" + userId + ") "
+							+ "AND provider_id IN (SELECT id FROM Provider WHERE type=\'" + providerType + "\');";
+			
+		} else if(category.equalsIgnoreCase("all") 
+					&& providerType.equalsIgnoreCase("all") 
+						&& !expenseStatus.equalsIgnoreCase("all")) {
+			
+			query = "SELECT * FROM Transactions "
+					+ "WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id =" + userId + ") "
+							+ "AND status =\'" + expenseStatus + "\';";
+	
+		} else if(category.equalsIgnoreCase("all") 
+					&& !providerType.equalsIgnoreCase("all") 
+						&& !expenseStatus.equalsIgnoreCase("all")) {
+			
+			query = "SELECT * FROM Transactions "
+					+ "WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id =" + userId + ") "
+							+ "AND provider_id IN (SELECT id FROM Provider WHERE type=\'" + providerType + "\') "
+							+ "AND status =\'" + expenseStatus + "\';";
+	
+		} else if(!category.equalsIgnoreCase("all") 
+					&& providerType.equalsIgnoreCase("all") 
+						&& expenseStatus.equalsIgnoreCase("all")) {
+			
+			query = "SELECT * FROM Transactions "
+					+ "WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id =" + userId + ") "
+							+ "AND category =\'" + category + "\';";
+	
+		} else if(!category.equalsIgnoreCase("all") 
+					&& !providerType.equalsIgnoreCase("all") 
+						&& expenseStatus.equalsIgnoreCase("all")) {
+			
+			query = "SELECT * FROM Transactions "
+					+ "WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id =" + userId + ") "
+							+ "AND category =\'" + category + "\' "
+							+ "AND provider_id IN (SELECT id FROM Provider WHERE type=\'" + providerType + "\');";
+	
+		} else if(!category.equalsIgnoreCase("all") 
+					&& providerType.equalsIgnoreCase("all") 
+						&& !expenseStatus.equalsIgnoreCase("all")) {
+			
+			query = "SELECT * FROM Transactions "
+					+ "WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id =" + userId + ") "
+							+ "AND category =\'" + category + "\' "
+							+ "AND status =\'" + expenseStatus + "\';";
+	
+		} else if(!category.equalsIgnoreCase("all") 
+					&& !providerType.equalsIgnoreCase("all") 
+						&& !expenseStatus.equalsIgnoreCase("all")) {
+			
+			query = "SELECT * FROM Transactions "
+					+ "WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id =" + userId + ") "
+							+ "AND category =\'" + category + "\' "
+							+ "AND provider_id IN (SELECT id FROM Provider WHERE type=\'" + providerType + "\') "
+							+ "AND status =\'" + expenseStatus + "\';";
+	
+		}
+		
+		select = con.createStatement(ResultSet.TYPE_FORWARD_ONLY,
+				ResultSet.CONCUR_READ_ONLY);
+		ResultSet result = select.executeQuery(query);
+		result = select.executeQuery(query);
+		ArrayList<ArrayList<String>> arrayList = new ArrayList<ArrayList<String>>();
+		while (result.next()) {
+			int providerId = result.getInt("provider_id");
+			ArrayList<String> sub = new ArrayList<String>();
+			sub.add(result.getString("category"));
+			sub.add(result.getString("id"));
+			sub.add(this.capitalizeWords(this.getProviderTypeByProviderId(providerId)));
+			sub.add(this.capitalizeWords(this.getProviderNameByProviderId(providerId)));
+			sub.add(this.capitalizeWords(this.getProviderAddressByProviderId(providerId)));
+			sub.add(result.getString("amount"));
+			sub.add(result.getString("time"));
+			sub.add(result.getString("duration"));
+			sub.add(this.account_service.getPaymentTypeByAccountId(result
+					.getInt("account_id")));
+			sub.add(result.getString("status"));
+			sub.add(result.getString("due_date"));
+
+			arrayList.add(sub);
+		}
+		con.close();
+		return arrayList;
+	}
+	
+	public ArrayList<String> getCategories()
+			throws Exception {
+		Class.forName("org.sqlite.JDBC");
+		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		Statement select = con.createStatement();
+		String query = "SELECT DISTINCT category FROM Transactions ORDER BY category;";
+		select = con.createStatement(ResultSet.TYPE_FORWARD_ONLY,
+				ResultSet.CONCUR_READ_ONLY);
+		ResultSet result = select.executeQuery(query);
+		result = select.executeQuery(query);
+		ArrayList<String> list = new ArrayList<String>();
+		while(result.next()) {
+			list.add(result.getString("category"));
+		}
+		con.close();
+		return list;
+	}
+	
+	public ArrayList<String> getCategoriesByUserId(int userId)
+			throws Exception {
+		Class.forName("org.sqlite.JDBC");
+		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		Statement select = con.createStatement();
+		String query = "SELECT DISTINCT category "
+				+ "FROM Transactions "
+				+ "WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id ="
+				+ userId + ") "
+				+ "ORDER BY category;";
+		select = con.createStatement(ResultSet.TYPE_FORWARD_ONLY,
+				ResultSet.CONCUR_READ_ONLY);
+		ResultSet result = select.executeQuery(query);
+		result = select.executeQuery(query);
+		ArrayList<String> list = new ArrayList<String>();
+		while(result.next()) {
+			list.add(result.getString("category"));
+		}
+		con.close();
+		return list;
+	}
+	
+	public ArrayList<String> getCategoriesBy(int userId, String providerType, String status)
+			throws Exception {
+		Class.forName("org.sqlite.JDBC");
+		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		Statement select = con.createStatement();
+		
+		String query = "";
+		
+		if(providerType.equalsIgnoreCase("all") && status.equalsIgnoreCase("all")) {
+			
+			query = "SELECT DISTINCT category "
+					+ "FROM Transactions "
+					+ "WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id =" + userId + ") ORDER BY category;";
+			
+		} else if(!providerType.equalsIgnoreCase("all") && status.equalsIgnoreCase("all")) {
+			
+			query = "SELECT DISTINCT category "
+					+ "FROM Transactions "
+					+ "WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id =" + userId + ") "
+					+ "AND provider_id IN (SELECT id FROM Provider WHERE type =\'" + providerType + "\') ORDER BY category;";
+			
+		} else if(providerType.equalsIgnoreCase("all") && !status.equalsIgnoreCase("all")) {
+			
+			query = "SELECT DISTINCT category "
+					+ "FROM Transactions "
+					+ "WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id =" + userId + ") "
+					+ "AND status =\'" + status + "\' ORDER BY category;";
+			
+		} else if(!providerType.equalsIgnoreCase("all") && !status.equalsIgnoreCase("all")) {
+			
+			query = "SELECT DISTINCT category "
+					+ "FROM Transactions "
+					+ "WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id =" + userId + ") "
+					+ "AND provider_id IN (SELECT id FROM Provider WHERE type =\'" + providerType + "\') "
+					+ "AND status =\'" + status + "\' ORDER BY category;";
+		}
+		
+		select = con.createStatement(ResultSet.TYPE_FORWARD_ONLY,
+				ResultSet.CONCUR_READ_ONLY);
+		ResultSet result = select.executeQuery(query);
+		result = select.executeQuery(query);
+		ArrayList<String> list = new ArrayList<String>();
+		while(result.next()) {
+			list.add(result.getString("category"));
+		}
+		con.close();
+		return list;
 	}
 
 	/**

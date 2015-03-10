@@ -2,7 +2,11 @@ package views;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
 import javax.swing.*;
+
+import models.Expense_BLL;
 
 public class ExpensesFrame extends JFrame {
 
@@ -25,6 +29,13 @@ public class ExpensesFrame extends JFrame {
 	
 	private String username;
 	
+	private JComboBox selectFilterCategory;
+	private JComboBox<String> selectFilterType;
+	private JComboBox<String> selectFilterStatus;
+	
+	private JButton btnFilter;
+	private JButton btnClearFilter;
+	
 	private JButton btnAddExpense;
 	private JButton btnUpdateStatus;
 	private JButton btnDeleteExpense;
@@ -32,7 +43,7 @@ public class ExpensesFrame extends JFrame {
 	public ExpensesFrame(String username) {
 		
 		this.username = username;
-		this.expensesPanel = new ViewExpensesPanel(username);
+		this.expensesPanel = new ViewExpensesPanel(username, "all", "all", "all");
 		
 		this.getContentPane().setBackground(new Color(248, 248, 248));
 		this.setBounds(100, 100, 1000, 600);
@@ -63,6 +74,14 @@ public class ExpensesFrame extends JFrame {
 	}
 	
 	/// Listener methods ///
+	
+	public void filterExpenses(ActionListener listener) {
+		btnFilter.addActionListener(listener);
+	}
+	
+	public void clearFilter(ActionListener listener) {
+		btnClearFilter.addActionListener(listener);
+	}
 	
 	public void addExpense(ActionListener listener) {
 		btnAddExpense.addActionListener(listener);
@@ -98,6 +117,18 @@ public class ExpensesFrame extends JFrame {
 		return billExpensePanel;
 	}
 	
+	public String getFilterCategory() {
+		return selectFilterCategory.getSelectedItem().toString();
+	}
+	
+	public String getFilterType() {
+		return selectFilterType.getSelectedItem().toString();
+	}
+	
+	public String getFilterStatus() {
+		return selectFilterStatus.getSelectedItem().toString();
+	}
+	
 	/// Setter methods ///
 	
 	public void hideExpenseForm() {
@@ -116,10 +147,10 @@ public class ExpensesFrame extends JFrame {
 		rightPanel.setVisible(true);
 	}
 	
-	public void refreshExpenses() {
-		middlePanel.removeAll();
-		expensesPanel = new ViewExpensesPanel(username);
-		middlePanel.add(expensesPanel, BorderLayout.CENTER);
+	public void clearFilter() {
+		selectFilterCategory.setSelectedIndex(0);
+		selectFilterType.setSelectedIndex(0);
+		selectFilterStatus.setSelectedIndex(0);
 	}
 	
 	/// Design methods ///
@@ -130,6 +161,42 @@ public class ExpensesFrame extends JFrame {
         topPanel.setLayout(new BorderLayout(0,0));
         topPanel.setBackground(new Color(224, 224, 224));
         topPanel.setPreferredSize(new Dimension(0, 40));
+        
+        JPanel filterPanel = new JPanel();
+        filterPanel.setOpaque(false);
+        topPanel.add(filterPanel, BorderLayout.WEST);
+        
+        // Get the list of all category
+        ArrayList<String> categoryList = new ArrayList<>();
+        categoryList.add("Category");
+        try{
+        	Expense_BLL exp = new Expense_BLL();
+        	categoryList.addAll(exp.getCategoriesByUsername(username));
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
+        // end
+		
+        JLabel lblFilter = new JLabel("Filter by: ");
+        lblFilter.setHorizontalAlignment(SwingConstants.LEFT);
+		filterPanel.add(lblFilter);
+		
+		selectFilterCategory = new JComboBox(categoryList.toArray());
+		filterPanel.add(selectFilterCategory);
+		
+		selectFilterType = new JComboBox<String>();
+		selectFilterType.setModel(new DefaultComboBoxModel<String>(new String[] {"Type", "PURCHASE", "BILL"}));
+		filterPanel.add(selectFilterType);
+		
+		selectFilterStatus = new JComboBox<String>();
+		selectFilterStatus.setModel(new DefaultComboBoxModel<String>(new String[] {"Status", "PAID", "UNPAID"}));
+		filterPanel.add(selectFilterStatus);
+		
+		btnFilter = new JButton("Apply");
+		filterPanel.add(btnFilter);
+		
+		btnClearFilter = new JButton("Clear");
+		filterPanel.add(btnClearFilter);
         
         JLabel lblUsername = new JLabel("Hi, " + username);
         lblUsername.setHorizontalAlignment(SwingConstants.CENTER);

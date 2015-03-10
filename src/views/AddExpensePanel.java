@@ -4,10 +4,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.*;
 import javax.swing.text.DateFormatter;
+
+import models.Expense_BLL;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -25,7 +28,7 @@ public class AddExpensePanel extends JPanel {
 	private JDateChooser chooserDate;
 	private JDateChooser chooserDueDate;
 	private JSpinner spinner;
-	private JComboBox<String> selectCategory;
+	private JComboBox selectCategory;
 	private JComboBox<String> selectMode;
 	private JComboBox<String> selectStatus;
 	private JComboBox<String> selectInterval;
@@ -57,8 +60,10 @@ public class AddExpensePanel extends JPanel {
 	/// Get methods ///
 	
 	public String getCategory() {
-		// return selectCategory.getSelectedItem().toString();
-		return textFieldCategory.getText();
+		if(selectCategory.getSelectedItem().toString() == "NEW CATEGORY")
+			return textFieldCategory.getText();
+		else
+			return selectCategory.getSelectedItem().toString();
 	}
 	
 	public String getMode() {
@@ -113,20 +118,30 @@ public class AddExpensePanel extends JPanel {
 	
 	public void clearAllFields() {
 
+		selectCategory.setSelectedIndex(0);
+		selectCategory.setVisible(true);
+		
 		textFieldCategory.setText("");
+		textFieldCategory.setVisible(false);
+		
 		textFieldProvider.setText("");
+		
 		if(type.toLowerCase().equals("purchase")){
 			textFieldLocation.setText("");
 			chooserDate.setCalendar(null);
 			
 		}
-		textFieldAmount.setText("");;
-		// selectCategory.setSelectedIndex(0);
+		
+		textFieldAmount.setText("");
+		
 		if(selectMode.getSelectedItem().toString().equals("CREDIT"))
 			selectMode.setSelectedIndex(0);
+		
 		selectStatus.setSelectedIndex(0);
+		
 		if(type.toLowerCase().equals("bill"))
 			selectInterval.setSelectedIndex(0);
+		
 		chooserDueDate.setCalendar(null);
 	}
 	
@@ -141,8 +156,6 @@ public class AddExpensePanel extends JPanel {
 		Dimension lblSizeSM = new Dimension(45, 32);		// Default dimension for label
 		Dimension fieldSize = new Dimension(305, 32);		// Default dimension for fields
 		Dimension fieldSizeSM = new Dimension(120, 32);		// Default dimension for fields
-		// Dimension btnSize = new Dimension(175, 32);
-		// Dimension btnSizeSM = new Dimension(120, 32);
 		
 		this.setLayout(new GridBagLayout());				// Set layout to GidBagLayout
 		GridBagConstraints gbc = new GridBagConstraints();	// the constraints
@@ -174,17 +187,27 @@ public class AddExpensePanel extends JPanel {
 
 		gbc.gridx = 1; gbc.gridwidth = 3;
         
-		/*
-		selectCategory = new JComboBox<String>();
-		selectCategory.setModel(new DefaultComboBoxModel<String>(new String[] {"Food", "Entertainment", "Insurance"}));
+        // Get the list of all category
+        ArrayList<String> categoryList = new ArrayList<>();
+        try{
+        	Expense_BLL exp = new Expense_BLL();
+        	categoryList.addAll(exp.getCategories());
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
+        categoryList.add("...");
+        categoryList.add("NEW CATEGORY");
+        // end
+		
+		selectCategory = new JComboBox(categoryList.toArray());
 		selectCategory.setFont(lblFont);
 		selectCategory.setPreferredSize(fieldSize);
 		this.add(selectCategory, gbc);
-		*/
 		
         textFieldCategory = new JTextField();
         textFieldCategory.setFont(fieldFont);
         textFieldCategory.setPreferredSize(fieldSize);
+        textFieldCategory.setVisible(false); // hide on start
 		this.add(textFieldCategory, gbc);
 		// end...
 		
@@ -392,6 +415,18 @@ public class AddExpensePanel extends JPanel {
         this.validate();
         
         /// Listeners ///
+        
+        selectCategory.addActionListener (new ActionListener () { // on-change of select category
+            public void actionPerformed(ActionEvent e) {
+            	if(selectCategory.getSelectedItem().toString() == "NEW CATEGORY") {
+            		selectCategory.setVisible(false);
+            		textFieldCategory.setVisible(true);
+                } else {
+            		selectCategory.setVisible(true);
+            		textFieldCategory.setVisible(false);
+            	}
+            }
+        });
         
         selectMode.addActionListener (new ActionListener () { // on-change of payment mode
             public void actionPerformed(ActionEvent e) {

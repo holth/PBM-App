@@ -26,6 +26,35 @@ public class Expense_BLL {
 		return this.expense_service.getTransactionByUsernameAndType(userId,
 				type.toUpperCase().trim());
 	}
+	
+	public ArrayList<ArrayList<String>> viewExpenseBy(
+			String username, String category, String providerType, String expenseStatus) 
+			throws Exception {
+		int userId = this.user_service.getUserIdByUsername(username);
+		return this.expense_service.getTransactionBy(userId, category, providerType, expenseStatus);
+	}
+
+	// to delete
+	public ArrayList<ArrayList<String>> viewExpenseByUsernameAndCategories(
+			String username, ArrayList<String> categories) throws Exception {
+		int userId = this.user_service.getUserIdByUsername(username);
+		return this.expense_service.getTransactionByUsernameAndCategories(userId, categories);
+	}
+	
+	public ArrayList<String> getCategories() throws Exception {
+		return this.expense_service.getCategories();
+	}
+	
+	public ArrayList<String> getCategoriesByUsername(String username) throws Exception {
+		int userId = this.user_service.getUserIdByUsername(username);
+		return this.expense_service.getCategoriesByUserId(userId);
+	}
+	
+	//
+	public ArrayList<String> getCategoriesBy(String username, String providerType, String status) throws Exception {
+		int userId = this.user_service.getUserIdByUsername(username);
+		return this.expense_service.getCategoriesBy(userId, providerType, status);
+	}
 
 	public boolean deleteExpense(int transactionId) throws Exception {
 		return this.expense_service.deleteTransaction(transactionId);

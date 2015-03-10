@@ -1,7 +1,6 @@
 package views;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import org.jdesktop.swingx.JXTreeTable;
 import org.jdesktop.swingx.treetable.AbstractMutableTreeTableNode;
@@ -10,9 +9,9 @@ import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
 public class DataTable {
 	
 	private String[] colName = {
+			"Category",
 			"Expense ID",
 			"Expense Type",
-			"Category",
             "Provider Name",
             "Location",
             "Amount",
@@ -25,20 +24,20 @@ public class DataTable {
 	private Node root;
 	private DefaultTreeTableModel model;
 	private JXTreeTable table;
-	private List<String[]> content;
+	private List<String[]> content = new ArrayList<>();
 
 	public DataTable(List<String[]> content) {
 		this.content = content;
 	}
 
-	public JXTreeTable getTreeTable() {
+	public JXTreeTable createTreeTable() {
 		root = new RootNode("Root");
 
 		ChildNode myChild = null;
 		
 		for (String[] data : this.content) {
 			ChildNode child = new ChildNode(data);
-			if (data.length <= 1) {
+			if (data.length <= 10) {
 				root.add(child);
 				myChild = child;
 			} else {
@@ -50,11 +49,17 @@ public class DataTable {
 		table = new JXTreeTable(model);
 		table.setShowGrid(true, true);
 		table.setColumnControlVisible(true);
-
-		table.packAll();
+		
+		table.getColumn("Expense ID").setPreferredWidth(0);
+		table.getColumn("Expense ID").setMinWidth(0);
+		table.getColumn("Expense ID").setMaxWidth(0);
+		
+		table.expandAll();
 
 		return table;
 	}
+	
+	/// Get methods ///
 	
 	class Node extends AbstractMutableTreeTableNode {
 
