@@ -33,13 +33,6 @@ public class Expense_BLL {
 		int userId = this.user_service.getUserIdByUsername(username);
 		return this.expense_service.getTransactionBy(userId, category, providerType, expenseStatus);
 	}
-
-	// to delete
-	public ArrayList<ArrayList<String>> viewExpenseByUsernameAndCategories(
-			String username, ArrayList<String> categories) throws Exception {
-		int userId = this.user_service.getUserIdByUsername(username);
-		return this.expense_service.getTransactionByUsernameAndCategories(userId, categories);
-	}
 	
 	public ArrayList<String> getCategories() throws Exception {
 		return this.expense_service.getCategories();
@@ -50,7 +43,6 @@ public class Expense_BLL {
 		return this.expense_service.getCategoriesByUserId(userId);
 	}
 	
-	//
 	public ArrayList<String> getCategoriesBy(String username, String providerType, String status) throws Exception {
 		int userId = this.user_service.getUserIdByUsername(username);
 		return this.expense_service.getCategoriesBy(userId, providerType, status);

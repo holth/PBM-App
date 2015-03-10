@@ -14,30 +14,24 @@ public class UsersController {
 	private UsersLoginPanel loginPanel;
 	private UsersSignupPanel signupPanel;
 	
+	/**
+	 * Constructor
+	 * @param usersFrame
+	 */
 	public UsersController(UsersFrame usersFrame){
 		
 		this.usersFrame = usersFrame;
-		
 		this.loginPanel = this.usersFrame.getLoginPanel();
-
 		this.signupPanel = this.usersFrame.getSignupPanel();
 		
 		this.listener();
 	}
 	
+	/**
+	 * Validate user information and allow/disallow access to expenses
+	 */
 	public void login() {
 		
-
-		usersFrame.dispose();
-		System.out.println("Logged in as " + "AddDemo!");
-
-		System.out.println("View expenses:");
-		ExpensesFrame expensesFrame = new ExpensesFrame("AppDemo");
-		new ExpensesController(expensesFrame);
-		
-		expensesFrame.setVisible(true);
-		
-		/*
 		String username = loginPanel.getUsername();
 		String password = String.valueOf(loginPanel.getPassword());
 		
@@ -72,10 +66,12 @@ public class UsersController {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		*/
 		
 	}
 	
+	/**
+	 * Show sign up form
+	 */
 	public void showSignup() {
 		
 		System.out.println("Sign up:");
@@ -83,6 +79,9 @@ public class UsersController {
 		
 	}
 	
+	/**
+	 * Create user in DB
+	 */
 	public void signup() {
 		
 		try {
@@ -133,6 +132,9 @@ public class UsersController {
 		
 	}
 	
+	/**
+	 * Cancel the sign up process, return to login
+	 */
 	public void cancelSignup() {
 		
 		System.out.println("Log in:");

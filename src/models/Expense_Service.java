@@ -152,54 +152,15 @@ public class Expense_Service {
 		return arrayList;
 	}
 	
-	// to delete
-	public ArrayList<ArrayList<String>> getTransactionByUsernameAndCategories(int userId, ArrayList<String> categories)
-			throws Exception {
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
-		Statement select = con.createStatement();
-		
-		String categoriesList = "";
-		for(int i = 0; i < categories.size(); i++) {
-			if(i == 0)
-				categoriesList += "\'" + categories.get(i) + "\'";
-			else
-				categoriesList += ",\'" + categories.get(i) + "\'";
-		}
-		
-		String query = "SELECT * FROM Transactions "
-				+ "WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id =" + userId + ") "
-				+ "AND category IN (" + categoriesList + ") "
-				+ "ORDER BY category;";
-		
-		select = con.createStatement(ResultSet.TYPE_FORWARD_ONLY,
-				ResultSet.CONCUR_READ_ONLY);
-		ResultSet result = select.executeQuery(query);
-		result = select.executeQuery(query);
-		ArrayList<ArrayList<String>> arrayList = new ArrayList<ArrayList<String>>();
-		while (result.next()) {
-			int providerId = result.getInt("provider_id");
-			ArrayList<String> sub = new ArrayList<String>();
-			sub.add(result.getString("category"));
-			sub.add(result.getString("id"));
-			sub.add(this.capitalizeWords(this.getProviderTypeByProviderId(providerId)));
-			sub.add(this.capitalizeWords(this.getProviderNameByProviderId(providerId)));
-			sub.add(this.capitalizeWords(this.getProviderAddressByProviderId(providerId)));
-			sub.add(result.getString("amount"));
-			sub.add(result.getString("time"));
-			sub.add(result.getString("duration"));
-			sub.add(this.account_service.getPaymentTypeByAccountId(result
-					.getInt("account_id")));
-			sub.add(result.getString("status"));
-			sub.add(result.getString("due_date"));
-
-			arrayList.add(sub);
-		}
-		con.close();
-		return arrayList;
-	}
-	
-	// NEW
+	/**
+	 * Display all this user's Transactions by category, provider type and expense status
+	 * @param userId
+	 * @param category
+	 * @param providerType
+	 * @param expenseStatus
+	 * @return
+	 * @throws Exception
+	 */
 	public ArrayList<ArrayList<String>> getTransactionBy(
 			int userId, String category, String providerType, String expenseStatus)
 			throws Exception {
@@ -307,6 +268,11 @@ public class Expense_Service {
 		return arrayList;
 	}
 	
+	/**
+	 * Get all unique categories
+	 * @return
+	 * @throws Exception
+	 */
 	public ArrayList<String> getCategories()
 			throws Exception {
 		Class.forName("org.sqlite.JDBC");
@@ -325,6 +291,12 @@ public class Expense_Service {
 		return list;
 	}
 	
+	/**
+	 * Get all unique categories by user
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
 	public ArrayList<String> getCategoriesByUserId(int userId)
 			throws Exception {
 		Class.forName("org.sqlite.JDBC");
@@ -347,6 +319,14 @@ public class Expense_Service {
 		return list;
 	}
 	
+	/**
+	 * Get unique categories by user, provider type and expense status
+	 * @param userId
+	 * @param providerType
+	 * @param status
+	 * @return
+	 * @throws Exception
+	 */
 	public ArrayList<String> getCategoriesBy(int userId, String providerType, String status)
 			throws Exception {
 		Class.forName("org.sqlite.JDBC");

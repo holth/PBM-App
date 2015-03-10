@@ -39,7 +39,7 @@ public class AddExpensePanel extends JPanel {
 	private String type;
 
 	/**
-	 * 
+	 * Constructor
 	 * @param type, 'PURCHASE' or 'BILL', to use to display fields
 	 */
 	public AddExpensePanel(String type) {
@@ -149,8 +149,8 @@ public class AddExpensePanel extends JPanel {
 	
 	public void loadExpenseFields(String type) {
 		
-		Font lblFont = new Font("Tacoma", 0, 12); 		// Default font for label
-		Font fieldFont = new Font("Tacoma", 0, 13); 	// Default font for fields
+		Font lblFont = new Font("Tacoma", 0, 12); 			// Default font for label
+		Font fieldFont = new Font("Tacoma", 0, 13); 		// Default font for fields
 
 		Dimension lblSize = new Dimension(65, 32);			// Default dimension for label
 		Dimension lblSizeSM = new Dimension(45, 32);		// Default dimension for label
@@ -187,7 +187,7 @@ public class AddExpensePanel extends JPanel {
 
 		gbc.gridx = 1; gbc.gridwidth = 3;
         
-        // Get the list of all category
+        // Get the list of categories
         ArrayList<String> categoryList = new ArrayList<>();
         try{
         	Expense_BLL exp = new Expense_BLL();

@@ -26,10 +26,18 @@ public class DataTable {
 	private JXTreeTable table;
 	private List<String[]> content = new ArrayList<>();
 
+	/**
+	 * Constructor
+	 * @param content
+	 */
 	public DataTable(List<String[]> content) {
 		this.content = content;
 	}
 
+	/**
+	 * Create a 'tree table' based on the provided content
+	 * @return
+	 */
 	public JXTreeTable createTreeTable() {
 		root = new RootNode("Root");
 
@@ -59,7 +67,7 @@ public class DataTable {
 		return table;
 	}
 	
-	/// Get methods ///
+	/// Node classes ///
 	
 	class Node extends AbstractMutableTreeTableNode {
 

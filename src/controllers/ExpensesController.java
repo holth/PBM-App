@@ -36,11 +36,17 @@ public class ExpensesController {
 		this.listener();
 	}
 
+	/**
+	 * View the expenses table in full and hide the 'add expense' form
+	 */
 	public void viewExpenses() {
 		
 		expensesFrame.hideExpenseForm();
 	}
 	
+	/**
+	 * Show the 'add expense' form for user to create new expense
+	 */
 	public void addExpense() {
 		
 		JRadioButton radioPurchase = new JRadioButton("Purchase");
@@ -78,6 +84,10 @@ public class ExpensesController {
 		}
 	}
 	
+	/**
+	 * Save the 'new expense' in DB
+	 * @param type, category, name, address, date, amount, interval, mode, status, due_date
+	 */
 	public void saveExpense(String type, String category, String name, String address, String date, 
 			Float amount, String interval, String mode, String status, String due_date) {
 		
@@ -106,7 +116,10 @@ public class ExpensesController {
 		
 	}
 	
-	
+	/**
+	 * Update status of expense(s) based on user selection
+	 * If user select a category, the expenses in that category will be updated.
+	 */
 	public void updateStatus() {
 		JXTreeTable table = viewExpensesPanel.getTable();
 		int row = table.getSelectedRow();
@@ -201,6 +214,10 @@ public class ExpensesController {
 		
 	}
 	
+	/**
+	 * Delete expense(s) based on user selection
+	 * If user select a category, the expenses in that category will deleted.
+	 */
 	public void deleteExpense() {
 		JXTreeTable table = viewExpensesPanel.getTable();
 		int row = table.getSelectedRow();	// get current selected row
