@@ -29,7 +29,7 @@ public class ExpensesFrame extends JFrame {
 	
 	private String username;
 	
-	private JComboBox selectFilterCategory;
+	private JComboBox<String> selectFilterCategory;
 	private JComboBox<String> selectFilterType;
 	private JComboBox<String> selectFilterStatus;
 	
@@ -148,6 +148,21 @@ public class ExpensesFrame extends JFrame {
 	}
 	
 	public void clearFilter() {
+		// Get the list of all category
+        ArrayList<String> categoryList = new ArrayList<>();
+        categoryList.add("Category");
+        try{
+        	Expense_BLL exp = new Expense_BLL();
+        	categoryList.addAll(exp.getCategoriesByUsername(username));
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
+        // end
+        selectFilterCategory.removeAllItems();
+		for(int i = 0; i < categoryList.size(); i++){
+			selectFilterCategory.addItem(categoryList.get(i).toString());
+		}
+		
 		selectFilterCategory.setSelectedIndex(0);
 		selectFilterType.setSelectedIndex(0);
 		selectFilterStatus.setSelectedIndex(0);
@@ -181,7 +196,10 @@ public class ExpensesFrame extends JFrame {
         lblFilter.setHorizontalAlignment(SwingConstants.LEFT);
 		filterPanel.add(lblFilter);
 		
-		selectFilterCategory = new JComboBox(categoryList.toArray());
+		selectFilterCategory = new JComboBox<String>();
+		for(int i = 0; i < categoryList.size(); i++){
+			selectFilterCategory.addItem(categoryList.get(i).toString());
+		}
 		filterPanel.add(selectFilterCategory);
 		
 		selectFilterType = new JComboBox<String>();

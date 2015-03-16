@@ -28,7 +28,7 @@ public class AddExpensePanel extends JPanel {
 	private JDateChooser chooserDate;
 	private JDateChooser chooserDueDate;
 	private JSpinner spinner;
-	private JComboBox selectCategory;
+	private JComboBox<String> selectCategory;
 	private JComboBox<String> selectMode;
 	private JComboBox<String> selectStatus;
 	private JComboBox<String> selectInterval;
@@ -118,6 +118,24 @@ public class AddExpensePanel extends JPanel {
 	
 	public void clearAllFields() {
 
+        selectCategory.setVisible(false);
+        selectCategory.removeAllItems();
+        // Get the list of categories
+        ArrayList<String> categoryList = new ArrayList<>();
+        try{
+        	Expense_BLL exp = new Expense_BLL();
+        	categoryList.addAll(exp.getCategories());
+        	categoryList.add("...");
+        	categoryList.add("NEW CATEGORY");
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
+        // end
+        
+		for(int i = 0; i < categoryList.size(); i++) {
+			selectCategory.addItem(categoryList.get(i).toString());
+		}
+		
 		selectCategory.setSelectedIndex(0);
 		selectCategory.setVisible(true);
 		
@@ -134,8 +152,7 @@ public class AddExpensePanel extends JPanel {
 		
 		textFieldAmount.setText("");
 		
-		if(selectMode.getSelectedItem().toString().equals("CREDIT"))
-			selectMode.setSelectedIndex(0);
+		selectMode.setSelectedIndex(0);
 		
 		selectStatus.setSelectedIndex(0);
 		
@@ -199,7 +216,10 @@ public class AddExpensePanel extends JPanel {
         categoryList.add("NEW CATEGORY");
         // end
 		
-		selectCategory = new JComboBox(categoryList.toArray());
+		selectCategory = new JComboBox<String>();
+		for(int i = 0; i < categoryList.size(); i++) {
+			selectCategory.addItem(categoryList.get(i));
+		}
 		selectCategory.setFont(lblFont);
 		selectCategory.setPreferredSize(fieldSize);
 		this.add(selectCategory, gbc);
@@ -418,7 +438,7 @@ public class AddExpensePanel extends JPanel {
         
         selectCategory.addActionListener (new ActionListener () { // on-change of select category
             public void actionPerformed(ActionEvent e) {
-            	if(selectCategory.getSelectedItem().toString() == "NEW CATEGORY") {
+            	if(selectCategory.isVisible() && selectCategory.getSelectedItem().toString().equals("NEW CATEGORY")) {
             		selectCategory.setVisible(false);
             		textFieldCategory.setVisible(true);
                 } else {

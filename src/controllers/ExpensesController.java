@@ -146,7 +146,7 @@ public class ExpensesController {
 			int cashOrDebitExpenses = 0;
 			int creditExpenses = 0;
 			
-			while(table.getValueAt(row, 0).equals(rootCategory)) {
+			while(row < table.getRowCount() && table.getValueAt(row, 0).equals(rootCategory)) {
 				int expenseID = Integer.parseInt((String) table.getValueAt(row, 1));
 				
 				if((mode.equalsIgnoreCase("Cash") || mode.equalsIgnoreCase("Debit")) 
@@ -233,7 +233,7 @@ public class ExpensesController {
 			int expensesCount = 0;
 			row++;
 			
-			while(table.getValueAt(row, 0).equals(rootCategory)) {
+			while(row < table.getRowCount() && table.getValueAt(row, 0).equals(rootCategory)) {
 				int expenseID = Integer.parseInt((String) table.getValueAt(row, 1));
 				
 				try {
@@ -263,6 +263,27 @@ public class ExpensesController {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void filterExpenses() {
+		String category = expensesFrame.getFilterCategory();
+		String type = expensesFrame.getFilterType();
+		String status = expensesFrame.getFilterStatus();
+		
+		if(category.equalsIgnoreCase("category"))
+			category = "all";
+		if(type.equalsIgnoreCase("type"))
+			type = "all";
+		if(status.equalsIgnoreCase("status"))
+			status = "all";
+		
+		System.out.println("Filter by: " + category + ", " + type + ", " + status + ".");
+		
+		viewExpensesPanel = new ViewExpensesPanel(username, category, type, status);
+		
+		expensesFrame.getMiddlePanel().removeAll();
+		expensesFrame.getMiddlePanel().add(viewExpensesPanel, BorderLayout.CENTER);
+		expensesFrame.getMiddlePanel().revalidate();
 	}
 	
 	/**
@@ -381,7 +402,7 @@ public class ExpensesController {
 		
 		expensesFrame.filterExpenses(new ActionListener() { // on-click of cancel
 			public void actionPerformed(ActionEvent e) {
-				refreshData();
+				filterExpenses();
 			}
 		});
 		
@@ -398,24 +419,13 @@ public class ExpensesController {
 	 * Refresh data table
 	 */
 	private void refreshData() {
-		String category = expensesFrame.getFilterCategory();
-		String type = expensesFrame.getFilterType();
-		String status = expensesFrame.getFilterStatus();
-		
-		if(category.equalsIgnoreCase("category"))
-			category = "all";
-		if(type.equalsIgnoreCase("type"))
-			type = "all";
-		if(status.equalsIgnoreCase("status"))
-			status = "all";
-		
-		System.out.println("Filter by: " + category + ", " + type + ", " + status + ".");
-		
-		viewExpensesPanel = new ViewExpensesPanel(username, category, type, status);
+		viewExpensesPanel = new ViewExpensesPanel(username, "all", "all", "all");
 		
 		expensesFrame.getMiddlePanel().removeAll();
 		expensesFrame.getMiddlePanel().add(viewExpensesPanel, BorderLayout.CENTER);
 		expensesFrame.getMiddlePanel().revalidate();
+		
+		expensesFrame.clearFilter();
 	}
 	
 	/**

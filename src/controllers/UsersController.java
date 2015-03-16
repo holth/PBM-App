@@ -53,7 +53,7 @@ public class UsersController {
 				return;
 			} else {
 					usersFrame.dispose();
-					System.out.print("Logged in as " + username + "!");
+					System.out.println("Logged in as " + username + "!");
 
 					System.out.println("View expenses:");
 					
