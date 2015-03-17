@@ -5,6 +5,9 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import views.ExpensesFrame;
+import controllers.ExpensesController;
+
 
 
 /**
@@ -12,12 +15,16 @@ import org.junit.Test;
  *
  */
 public class ExpenseControllerTest {
+	
+	private ExpensesController expenses;
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
+		ExpensesFrame expensesFrame = new ExpensesFrame("AppDemo");
+		expenses = new ExpensesController(expensesFrame);
 	}
 
 

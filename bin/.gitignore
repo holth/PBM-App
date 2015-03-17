@@ -1,3 +1,4 @@
-/test
-/tests
 /controllers
+/models
+/test
+/views
