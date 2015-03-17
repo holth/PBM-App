@@ -30,10 +30,7 @@ public class UsersController {
 	/**
 	 * Validate user information and allow/disallow access to expenses
 	 */
-	public void login() {
-		
-		String username = loginPanel.getUsername();
-		String password = String.valueOf(loginPanel.getPassword());
+	public void login(String username, String password) {
 		
 		try {
 			User_BLL user = new User_BLL();
@@ -82,13 +79,10 @@ public class UsersController {
 	/**
 	 * Create user in DB
 	 */
-	public void signup() {
+	public void signup(String username, String password, String pwdConfirm) {
 		
 		try {
 			User_BLL user = new User_BLL();
-			String username = signupPanel.getUsername();
-			String password = String.valueOf((signupPanel.getPwd()));
-			String pwdConfirm = String.valueOf(signupPanel.getPwdConfirm());
 			
 			// Validate presence of username and password
 			if(username.equals("") || password.equals("") || pwdConfirm.equals(""))
@@ -149,7 +143,9 @@ public class UsersController {
 		
 		loginPanel.login(new ActionListener() { // on-click of 'login'
 			public void actionPerformed(ActionEvent e) {
-				login();
+				String username = loginPanel.getUsername();
+				String password = String.valueOf(loginPanel.getPassword());
+				login(username, password);
 			}
 		});
 		
@@ -161,7 +157,10 @@ public class UsersController {
 		
 		signupPanel.signup(new ActionListener() { // on-click of 'sign up now'
 			public void actionPerformed(ActionEvent e) {
-				signup();
+				String username = signupPanel.getUsername();
+				String password = String.valueOf((signupPanel.getPwd()));
+				String pwdConfirm = String.valueOf(signupPanel.getPwdConfirm());
+				signup(username, password, pwdConfirm);
 			}
 		});
 		
