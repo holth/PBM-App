@@ -10,8 +10,8 @@ import org.junit.Test;
 import views.*;
 import controllers.UsersController;
 
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+/*import javax.swing.JPasswordField;
+import javax.swing.JTextField;*/
 
 
 public class UserControllerTest {
@@ -83,8 +83,33 @@ public class UserControllerTest {
 	public void testSignupSuccess() throws Exception {
 		
 		users.showSignup();
-		users.signup("username", "pass", "pass");
-		assertTrue(((UsersLoginPanel) getField(users, "loginPanel")).isShowing());
+		//users.signup("username", "pass", "pass");
+		//assertTrue(((UsersLoginPanel) getField(users, "loginPanel")).isShowing());
+		
+	}
+	
+	/**
+	 * should not login
+	 */
+	@Test
+	public void testLoginFail() throws Exception {
+		
+		users.login("", "");
+		assertTrue(((UsersFrame) getField(users, "usersFrame")).isVisible());
+		
+		users.login("AppDemo", "wrong password");
+		assertTrue(((UsersFrame) getField(users, "usersFrame")).isVisible());
+		
+	}
+	
+	/**
+	 * should login
+	 */
+	@Test
+	public void testLoginSuccess() throws Exception {
+		
+		users.login("AppDemo", "appdemo");
+		assertFalse(((UsersFrame) getField(users, "usersFrame")).isVisible());
 		
 	}
 

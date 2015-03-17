@@ -218,9 +218,7 @@ public class ExpensesController {
 	 * Delete expense(s) based on user selection
 	 * If user select a category, the expenses in that category will deleted.
 	 */
-	public void deleteExpense() {
-		JXTreeTable table = viewExpensesPanel.getTable();
-		int row = table.getSelectedRow();	// get current selected row
+	public void deleteExpense(JXTreeTable table, int row) {
 		
 		if(row < 0) {					// no row selected
 			JOptionPane.showMessageDialog(null, 
@@ -308,7 +306,9 @@ public class ExpensesController {
 		expensesFrame.deleteExpense(new ActionListener() { // on-click of delete
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Delete expenses?");
-				deleteExpense();
+				JXTreeTable table = viewExpensesPanel.getTable();
+				int row = table.getSelectedRow();	// get current selected row
+				deleteExpense(table, row);
 			}
 		});
 		
