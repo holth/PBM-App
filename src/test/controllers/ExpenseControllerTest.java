@@ -9,7 +9,9 @@ import org.junit.Test;
 
 import views.ExpensesFrame;
 import views.ViewExpensesPanel;
+import controllers.Expense;
 import controllers.ExpensesController;
+import controllers.PurchaseExpense;
 
 
 
@@ -19,7 +21,7 @@ import controllers.ExpensesController;
  */
 public class ExpenseControllerTest {
 	
-	private ExpensesController expenses;
+	private ExpensesController expensesController;
 
 	/**
 	 * @throws java.lang.Exception
@@ -27,7 +29,7 @@ public class ExpenseControllerTest {
 	@Before
 	public void setUp() throws Exception {
 		ExpensesFrame expensesFrame = new ExpensesFrame("AppDemo");
-		expenses = new ExpensesController(expensesFrame);
+		expensesController = new ExpensesController(expensesFrame);
 	}
 
 
@@ -37,8 +39,8 @@ public class ExpenseControllerTest {
 	@Test
 	public void testViewExpenses() throws Exception {
 		
-		expenses.viewExpenses();
-		assertTrue(((ViewExpensesPanel) getField(expenses, "viewExpensesPanel")).isShowing());
+		expensesController.viewExpenses();
+		assertTrue(((ViewExpensesPanel) getField(expensesController, "viewExpensesPanel")).isShowing());
 		
 	}
 	
@@ -62,13 +64,15 @@ public class ExpenseControllerTest {
 	public void testAddExpense() throws Exception {
 
 
-		ViewExpensesPanel view = (ViewExpensesPanel) getField(expenses, "viewExpensesPanel");
+		ViewExpensesPanel view = (ViewExpensesPanel) getField(expensesController, "viewExpensesPanel");
 		int sizeBefore = view.getTable().getRowCount();
 		
-		expenses.saveExpense("Purchase", "FOOD & DINNING", "Tim Hortons", "Concordia", "2015-03-15", 
-				(float) 7.99, "N/A", "Credit Card", "Unpaid", "2015-04-15");
+		
+		Expense expense = new PurchaseExpense("FOOD & DINNING", "Tim Hortons", "Concordia", "2015-03-15", 
+				(float) 7.99, "Credit Card", "Unpaid", "2015-04-15");
+		expensesController.saveExpense(expense);
 
-		view = (ViewExpensesPanel) getField(expenses, "viewExpensesPanel");
+		view = (ViewExpensesPanel) getField(expensesController, "viewExpensesPanel");
 		int sizeAfter = view.getTable().getRowCount();
 		
 		assertTrue(sizeBefore + 1 == sizeAfter || sizeBefore + 2 == sizeAfter);
@@ -81,13 +85,13 @@ public class ExpenseControllerTest {
 	@Test
 	public void testUpdateStatus() throws Exception {
 
-		ViewExpensesPanel view = (ViewExpensesPanel) getField(expenses, "viewExpensesPanel");
+		ViewExpensesPanel view = (ViewExpensesPanel) getField(expensesController, "viewExpensesPanel");
 		int rowIndexToUpdate = 2;
 		String statusBefore = (String) view.getTable().getValueAt(rowIndexToUpdate, 9);
 		
-		expenses.updateStatus(view.getTable(), rowIndexToUpdate);
+		expensesController.updateStatus(view.getTable(), rowIndexToUpdate);
 
-		view = (ViewExpensesPanel) getField(expenses, "viewExpensesPanel");
+		view = (ViewExpensesPanel) getField(expensesController, "viewExpensesPanel");
 		String statusAfter = (String) view.getTable().getValueAt(rowIndexToUpdate, 9);
 		
 		//System.out.println(statusBefore + statusAfter);
@@ -103,12 +107,12 @@ public class ExpenseControllerTest {
 	public void testDeleteExpenses() throws Exception {
 
 
-		ViewExpensesPanel view = (ViewExpensesPanel) getField(expenses, "viewExpensesPanel");
+		ViewExpensesPanel view = (ViewExpensesPanel) getField(expensesController, "viewExpensesPanel");
 		int sizeBefore = view.getTable().getRowCount();
 		
-		expenses.deleteExpense(view.getTable(), 11);
+		expensesController.deleteExpense(view.getTable(), 11);
 
-		view = (ViewExpensesPanel) getField(expenses, "viewExpensesPanel");
+		view = (ViewExpensesPanel) getField(expensesController, "viewExpensesPanel");
 		int sizeAfter = view.getTable().getRowCount();
 		
 		assertNotSame(sizeBefore, sizeAfter);
