@@ -84,21 +84,16 @@ public class ExpensesController {
 		}
 	}
 	
+	
 	/**
 	 * Save the 'new expense' in DB
-	 * @param type, category, name, address, date, amount, interval, mode, status, due_date
+	 * @param Expense object
 	 */
-	public void saveExpense(String type, String category, String name, String address, String date, 
-			Float amount, String interval, String mode, String status, String due_date) {
+	public void saveExpense(Expense newExpense) {
 		
 		try {
-			Expense_BLL expenseModel = new Expense_BLL();
-			
-			boolean success = expenseModel.addExpense(username, mode, name, type, address,
-					amount, category, status, interval, date, due_date);
-			
-			if(success) {
-				if(type.equals("Purchase"))
+			if(newExpense.save(username)) {
+				if(newExpense.getExpenseType().equals("Purchase"))
 					purchaseExpensePanel.clearAllFields();
 				else
 					billExpensePanel.clearAllFields();
@@ -315,11 +310,11 @@ public class ExpensesController {
 		billExpensePanel.save(new ActionListener() { // on-click of save
 			public void actionPerformed(ActionEvent e) {
 				
-				String type = "Bill";
+				//String type = "Bill";
 				String category = billExpensePanel.getCategory();
 				String bname = billExpensePanel.getProvider();
-				String baddress = "NA";
-				String bdate = "NA";
+				String baddress = "Headquaters";
+				//String bdate = "N/A";
 				String bamount = billExpensePanel.getAmount();
 				String binterval = billExpensePanel.getInterval();
 				String bmode = billExpensePanel.getMode();
@@ -329,10 +324,10 @@ public class ExpensesController {
 				if(bmode == "Cash" || bmode == "Debit")
 				{
 					bstatus = "Paid";
-					bdue_date = "NA";
+					bdue_date = "N/A";
 				}
 				if(bstatus == "Paid")
-					bdue_date = "NA";
+					bdue_date = "N/A";
 				if(category.equals("") || bname.equals("") || bamount.equals("") || bmode.equals("") || bstatus.equals("")|| bdue_date.equals("") ||
 						binterval.equals(""))
 					errormessages("ERROR: Bill Fields are empty!");
@@ -342,7 +337,10 @@ public class ExpensesController {
 				else 
 				{
 					Float bamountFloat = Float.valueOf(bamount);
-					saveExpense(type, category, bname, baddress, bdate, bamountFloat, binterval, bmode, bstatus, bdue_date);
+					Expense billExpense = new BillExpense(category, bname, baddress, bamountFloat, binterval,
+							bmode, bstatus, bdue_date);
+
+					saveExpense(billExpense);
 				}
 			}
 		});
@@ -357,7 +355,7 @@ public class ExpensesController {
 		purchaseExpensePanel.save(new ActionListener() { // on-click of save
 			public void actionPerformed(ActionEvent e) {
 				
-				String type = "Purchase";
+				//String type = "Purchase";
 				String category = purchaseExpensePanel.getCategory();
 				String pname = purchaseExpensePanel.getProvider();
 				String paddress = purchaseExpensePanel.getAddress();
@@ -365,7 +363,7 @@ public class ExpensesController {
 				if(purchaseExpensePanel.getDate() != null)
 					pdate = purchaseExpensePanel.getDate().toString();
 				String pamount = purchaseExpensePanel.getAmount();
-				String pinterval = "N/A";
+				//String pinterval = "N/A";
 				String pmode = purchaseExpensePanel.getMode();
 				String pstatus = purchaseExpensePanel.getStatus();
 				String pdue_date = purchaseExpensePanel.getDueDate();
@@ -373,10 +371,10 @@ public class ExpensesController {
 				if(pmode == "Cash" || pmode == "Debit")
 				{
 					pstatus = "Paid";
-					pdue_date = "NA";
+					pdue_date = "N/A";
 				}
 				if(pstatus == "Paid")
-					pdue_date = "NA";
+					pdue_date = "N/A";
 				if(category.equals("") || pname.equals("") ||paddress.equals("") || pdate.equals("") ||pamount.equals("") ||pmode.equals("") 
 						|| pstatus.equals("") || pdue_date.equals(""))
 				{
@@ -387,7 +385,10 @@ public class ExpensesController {
 				else
 				{
 					float pamountFloat = Float.valueOf(pamount);
-					saveExpense(type, category, pname, paddress, pdate, pamountFloat, pinterval, pmode, pstatus, pdue_date);
+					Expense purchaseExpense = new PurchaseExpense(category, pname, paddress, pdate, pamountFloat, 
+							pmode, pstatus, pdue_date);
+		
+					saveExpense(purchaseExpense);
 				}
 			
 			}
