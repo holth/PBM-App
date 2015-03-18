@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.lang.reflect.Field;
 
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -65,13 +64,14 @@ public class ExpenseControllerTest {
 
 		ViewExpensesPanel view = (ViewExpensesPanel) getField(expenses, "viewExpensesPanel");
 		int sizeBefore = view.getTable().getRowCount();
+		
 		expenses.saveExpense("Purchase", "FOOD & DINNING", "Tim Hortons", "Concordia", "2015-03-15", 
 				(float) 7.99, "N/A", "Credit Card", "Unpaid", "2015-04-15");
 
 		view = (ViewExpensesPanel) getField(expenses, "viewExpensesPanel");
 		int sizeAfter = view.getTable().getRowCount();
 		
-		assertSame(sizeBefore + 1, sizeAfter);
+		assertTrue(sizeBefore + 1 == sizeAfter || sizeBefore + 2 == sizeAfter);
 		
 	}
 	
@@ -81,7 +81,17 @@ public class ExpenseControllerTest {
 	@Test
 	public void testUpdateStatus() throws Exception {
 
-		//fail("Not yet implemented");
+		ViewExpensesPanel view = (ViewExpensesPanel) getField(expenses, "viewExpensesPanel");
+		int rowIndexToUpdate = 2;
+		String statusBefore = (String) view.getTable().getValueAt(rowIndexToUpdate, 9);
+		
+		expenses.updateStatus(view.getTable(), rowIndexToUpdate);
+
+		view = (ViewExpensesPanel) getField(expenses, "viewExpensesPanel");
+		String statusAfter = (String) view.getTable().getValueAt(rowIndexToUpdate, 9);
+		
+		//System.out.println(statusBefore + statusAfter);
+		assertNotEquals(statusBefore, statusAfter);
 		
 	}
 	
@@ -95,6 +105,7 @@ public class ExpenseControllerTest {
 
 		ViewExpensesPanel view = (ViewExpensesPanel) getField(expenses, "viewExpensesPanel");
 		int sizeBefore = view.getTable().getRowCount();
+		
 		expenses.deleteExpense(view.getTable(), 11);
 
 		view = (ViewExpensesPanel) getField(expenses, "viewExpensesPanel");

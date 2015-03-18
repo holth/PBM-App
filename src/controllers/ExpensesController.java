@@ -120,9 +120,7 @@ public class ExpensesController {
 	 * Update status of expense(s) based on user selection
 	 * If user select a category, the expenses in that category will be updated.
 	 */
-	public void updateStatus() {
-		JXTreeTable table = viewExpensesPanel.getTable();
-		int row = table.getSelectedRow();
+	public void updateStatus(JXTreeTable table, int row) {
 		
 		if(row < 0) {
 			JOptionPane.showMessageDialog(null, 
@@ -299,7 +297,9 @@ public class ExpensesController {
 		expensesFrame.updateStatus(new ActionListener() { // on-click of update status
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Update status:");
-				updateStatus();
+				JXTreeTable table = viewExpensesPanel.getTable();
+				int row = table.getSelectedRow();
+				updateStatus(table, row);	//move parameters here for the convenience of test
 			}
 		});
 		
@@ -308,7 +308,7 @@ public class ExpensesController {
 				System.out.println("Delete expenses?");
 				JXTreeTable table = viewExpensesPanel.getTable();
 				int row = table.getSelectedRow();	// get current selected row
-				deleteExpense(table, row);
+				deleteExpense(table, row); //move parameters here for the convenience of test
 			}
 		});
 		
