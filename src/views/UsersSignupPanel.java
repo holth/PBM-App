@@ -93,6 +93,13 @@ public class UsersSignupPanel extends JPanel {
 	public void signup(ActionListener listener) {
 		btnSignup.addActionListener(listener);
 	}
+	
+	public void clearAllFields()
+	{
+		txtFieldName.setText("");
+		pwdFieldPwd.setText("");
+		pwdFieldPwdConfirm.setText("");
+	}
 
 	//*************************************************************************************************
 	//**************Getter and Setter methods for login and signup*************************************

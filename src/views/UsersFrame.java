@@ -56,10 +56,12 @@ public class UsersFrame extends JFrame {
 	/// Setter methods ///
 	
 	public void showSignupPanel() {
+		signupPanel.clearAllFields();
 		cLayout.show(mainPanel, "signup");
 	}
 	
 	public void showLoginPanel() {
+		loginPanel.clearAllFields();
 		cLayout.show(mainPanel, "login");
 	}
 	
