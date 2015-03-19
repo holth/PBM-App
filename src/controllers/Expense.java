@@ -1,14 +1,34 @@
 package controllers;
 
 /**
- * Interface to be implemented by PurchaseExpense or BillExpense
+ * Abstract class to be extended by PurchaseExpense or BillExpense
  */
 
-public interface Expense
+public abstract class Expense
 {
 	
-	public boolean save(String userName) throws Exception;
-	public String getExpenseType();
-	public String toString();
+	protected String expenseType;
+	protected String category;
+
+	protected String providerName;
+	protected String providerAddress;
+	
+	protected Float amount;
+	
+	protected String paymentMode;		//Cash, Debit or Credit card
+	protected String status;			//Paid or Unpaid
+	protected String dueDate;
+	
+	
+	public abstract boolean save(String userName) throws Exception;
+	
+	public abstract String toString();
+	
+	/**
+	 * @return the expenseType
+	 */
+	public String getExpenseType() {
+		return expenseType;
+	}
 	
 }

@@ -3,23 +3,14 @@ package controllers;
 import models.Expense_BLL;
 
 /**
- * Class implementing an Expense object of Purchase type
+ * Class extending an Expense object of Purchase type
  */
 
-public class PurchaseExpense implements Expense
+public class PurchaseExpense extends Expense
 {
-	private String expenseType;
-	private String category;
-
-	private String providerName;
-	private String providerAddress;
+	
 	private String date;
-	
-	private Float amount;
-	
-	private String paymentMode;		//Cash, Debit or Credit card
-	private String status;			//Paid or Unpaid
-	private String dueDate;
+
 	
 	public PurchaseExpense(String pcategory, String pname, String paddress, String pdate, Float pamount, 
 			String pmode, String pstatus, String pdue_date)
@@ -43,70 +34,6 @@ public class PurchaseExpense implements Expense
 				amount, category, status, "N/A", date, dueDate);	//purchase recurrence is N/A
 		
 		return success;
-	}
-	
-	/**
-	 * @return the expenseType
-	 */
-	public String getExpenseType() {
-		return expenseType;
-	}
-	
-	/**
-	 * @return the category
-	 */
-	public String getCategory() {
-		return category;
-	}
-
-	/**
-	 * @return the providerName
-	 */
-	public String getProviderName() {
-		return providerName;
-	}
-
-	/**
-	 * @return the providerAddress
-	 */
-	public String getProviderAddress() {
-		return providerAddress;
-	}
-
-	/**
-	 * @return the amount
-	 */
-	public Float getAmount() {
-		return amount;
-	}
-
-	/**
-	 * @return the date
-	 */
-	public String getDate() {
-		return date;
-	}
-	
-	
-	/**
-	 * @return the paymentMode
-	 */
-	public String getPaymentMode() {
-		return paymentMode;
-	}
-
-	/**
-	 * @return the status
-	 */
-	public String getStatus() {
-		return status;
-	}
-
-	/**
-	 * @return the dutDate
-	 */
-	public String getDutDate() {
-		return dueDate;
 	}
 	
 	
