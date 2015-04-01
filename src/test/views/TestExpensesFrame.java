@@ -1,19 +1,10 @@
 package test.views;
 
-
-
 import static org.junit.Assert.*;
-
-import java.awt.List;
-import java.util.ArrayList;
-
-import org.jdesktop.swingx.JXTreeTable;
-import org.junit.Assert;
 
 import views.AddExpensePanel;
 import views.ExpensesFrame;
 import views.ViewExpensesPanel;
-
 
 public class TestExpensesFrame {
 	
