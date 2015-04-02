@@ -24,6 +24,13 @@ public class UsersSignupPanelTest extends ViewsTestHelper {
 		((JPasswordField) getField(signupPanel, "pwdFieldPwdConfirm")).setText("myPassword");
 	}
 	
+	/**
+	 * Test the default components of UsersSignupPanel class.
+	 * UsersSignupPanel must contain a field for 'username',
+	 * a field for 'password', a field for 'password's
+	 * confirmation', a submit button and a cancel button.
+	 * @throws Exception
+	 */
 	@Test
 	public void testDefaultComponents() throws Exception {
 		
@@ -37,6 +44,12 @@ public class UsersSignupPanelTest extends ViewsTestHelper {
 		assertTrue(((JButton) getField(signupPanel, "btnCancelSignup")).isVisible());
 	}
 	
+	/**
+	 * Test the clearAllFields() method of UsersSignupPanel class.
+	 * After calling the method, the fields 'username', 'password'
+	 * and 'password confirmation' must be empty.
+	 * @throws Exception
+	 */
 	@Test
 	public void testClearAllFields() throws Exception {
 		
@@ -47,19 +60,29 @@ public class UsersSignupPanelTest extends ViewsTestHelper {
 		
 		signupPanel.clearAllFields();
 		
-		// Field name, password and confirm password must be blank
+		// Username must be blank
 		assertEquals("", signupPanel.getUsername());
+		
+		// The length of password and confirmation must be 0.
 		assertEquals(0, signupPanel.getPwd().length);
 		assertEquals(0, signupPanel.getPwdConfirm().length);
 	}
 	
+	/**
+	 * Test the getUsername() method of UsersSignupPanel class.
+	 * The method must return the correct 'username'.
+	 * @throws Exception
+	 */
 	@Test
 	public void testGetUsername() throws Exception {
-		
-		// Username must be a String
-		assertEquals("John".getClass(), signupPanel.getUsername().getClass());
+
+		assertEquals("John", signupPanel.getUsername());
 	}
 	
+	/**
+	 * Test the getPwd() method of UsersSignupPanel class.
+	 * The method must return an array of characters.
+	 */
 	@Test
 	public void testGetPwd() {
 		
@@ -68,6 +91,10 @@ public class UsersSignupPanelTest extends ViewsTestHelper {
 		assertSame(charArray.getClass(), signupPanel.getPwd().getClass());
 	}
 	
+	/**
+	 * Test the getPwdConfirm() method of UsersSignupPanel class.
+	 * The method must return an array of characters.
+	 */
 	@Test
 	public void testGetPwdConfirm() {
 		

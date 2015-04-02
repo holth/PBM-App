@@ -21,7 +21,14 @@ public class UsersLoginPanelTest extends ViewsTestHelper {
 		((JTextField) getField(loginPanel, "txtFieldName")).setText("John");
 		((JPasswordField) getField(loginPanel, "pwdFieldPwd")).setText("myPassword");
 	}
-
+	
+	/**
+	 * Test the default components of the UsersLoginPanel class.
+	 * UsersLoginPanel must contain a field for 'username', a
+	 * field for 'password', a submit button and a 'signup now'
+	 * button.
+	 * @throws Exception
+	 */
 	@Test
 	public void testDefaultComponents() throws Exception {
 		
@@ -34,6 +41,12 @@ public class UsersLoginPanelTest extends ViewsTestHelper {
 		assertTrue(((JButton) getField(loginPanel, "btnShowSignup")).isVisible());
 	}
 	
+	/**
+	 * Test the clearAllFields() method of UsersLoginPanel class.
+	 * After calling the method, the fields 'username' and
+	 * 'password' must be empty.
+	 * @throws Exception
+	 */
 	@Test
 	public void testClearAllFields() throws Exception {
 		
@@ -41,20 +54,32 @@ public class UsersLoginPanelTest extends ViewsTestHelper {
 		assertEquals("John", loginPanel.getUsername());
 		assertNotEquals(0, loginPanel.getPassword().length);
 		
+		// Call the method
 		loginPanel.clearAllFields();
 		
-		// Fields name and password must be blank
+		// Username must be blank
 		assertEquals("", loginPanel.getUsername());
+		
+		// Password's lenth = 0
 		assertEquals(0, loginPanel.getPassword().length);
 	}
 	
+	/**
+	 * Test the getUsername() method of UsersLoginPanel class.
+	 * The method must return the correct 'username'.
+	 * @throws Exception
+	 */
 	@Test
 	public void textGetUsername() throws Exception {
-		
-		// Username must be a String
-		assertEquals("John".getClass(), loginPanel.getUsername().getClass());
+
+		assertEquals("John", loginPanel.getUsername());
 	}
 	
+	/**
+	 * Test the getPassword() method of UsersLoginPanel class.
+	 * The method must return an array of characters.
+	 * @throws Exception
+	 */
 	@Test
 	public void textGetPassword() throws Exception {
 		
