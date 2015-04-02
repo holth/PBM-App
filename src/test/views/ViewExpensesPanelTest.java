@@ -13,27 +13,17 @@ public class ViewExpensesPanelTest {
 	
 	@Before
 	public void setUp() {
-		expensesPanel = new ViewExpensesPanel("John", "all", "all", "all");
+		expensesPanel = new ViewExpensesPanel("AppDemo", "all", "all", "all");
 	}
 	
 	/**
 	 * Test the default components of ViewExpensePanel class.
-	 * ViewExpensePanel must contain a JXTreeTable.
+	 * ViewExpensePanel must contain a DataTable.
 	 */
 	@Test
 	public void testDefaultComponents() {
-		// TODO: Table is present.
-	}
-	
-	/*----------
-	 * TO DELETE
-	 * ---------
-	 */
-	@org.junit.Test
-	public void TestGetTable() {
-		ViewExpensesPanel v =new ViewExpensesPanel("abc", "all", "credit", "unpaid");
-		JXTreeTable testTable = v.getTable();
-		assertNotNull(testTable);
+		
+		assertNotNull(expensesPanel.getTable());
 	}
 
 }

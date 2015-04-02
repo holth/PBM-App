@@ -4,9 +4,13 @@ import static org.junit.Assert.*;
 
 import org.junit.*;
 
+import com.toedter.calendar.JDateChooser;
+
+import javax.swing.*;
+
 import views.AddExpensePanel;
 
-public class AddExpensePanelTest {
+public class AddExpensePanelTest extends ViewsTestHelper {
 
 	AddExpensePanel purchaseExpense;
 	AddExpensePanel billExpense;
@@ -28,7 +32,21 @@ public class AddExpensePanelTest {
 	 */
 	@Test
 	public void testPurchaseComponents() throws Exception {
-		fail("Not yet implemented");
+		
+		assertTrue(((JComboBox) getField(purchaseExpense, "selectCategory")).isVisible());
+		
+		// Cannot be visible
+		assertFalse(((JTextField) getField(purchaseExpense, "textFieldCategory")).isVisible());
+		
+		assertTrue(((JTextField) getField(purchaseExpense, "textFieldProvider")).isVisible());
+		assertTrue(((JTextField) getField(purchaseExpense, "textFieldLocation")).isVisible());
+		assertTrue(((JTextField) getField(purchaseExpense, "textFieldAmount")).isVisible());
+		assertTrue(((JDateChooser) getField(purchaseExpense, "chooserDate")).isVisible());
+		assertTrue(((JComboBox) getField(purchaseExpense, "selectMode")).isVisible());
+		assertTrue(((JComboBox) getField(purchaseExpense, "selectStatus")).isVisible());
+		
+		assertTrue(((JButton) getField(purchaseExpense, "btnSave")).isVisible());
+		assertTrue(((JButton) getField(purchaseExpense, "btnCancel")).isVisible());
 	}
 	
 	/**
@@ -43,7 +61,20 @@ public class AddExpensePanelTest {
 	 */
 	@Test
 	public void testBillComponents() throws Exception {
-		fail("Not yet implemented");
+		
+		assertTrue(((JComboBox) getField(billExpense, "selectCategory")).isVisible());
+		
+		// Cannot be visible
+		assertFalse(((JTextField) getField(billExpense, "textFieldCategory")).isVisible());
+		
+		assertTrue(((JTextField) getField(billExpense, "textFieldProvider")).isVisible());
+		assertTrue(((JTextField) getField(billExpense, "textFieldAmount")).isVisible());
+		assertTrue(((JComboBox) getField(billExpense, "selectInterval")).isVisible());
+		assertTrue(((JComboBox) getField(billExpense, "selectMode")).isVisible());
+		assertTrue(((JComboBox) getField(purchaseExpense, "selectStatus")).isVisible());
+		
+		assertTrue(((JButton) getField(billExpense, "btnSave")).isVisible());
+		assertTrue(((JButton) getField(billExpense, "btnCancel")).isVisible());
 	}
 	
 	/**
@@ -54,7 +85,16 @@ public class AddExpensePanelTest {
 	 */
 	@Test
 	public void testClearAllFields() throws Exception {
-		fail("Not yet implemented");
+		
+		((JTextField) getField(billExpense, "textFieldCategory")).setText("FOOD");
+		((JTextField) getField(billExpense, "textFieldProvider")).setText("McDonalds");
+		((JTextField) getField(billExpense, "textFieldAmount")).setText("9.95");
+		
+		billExpense.clearAllFields();
+		
+		assertEquals("", ((JTextField) getField(billExpense, "textFieldCategory")).getText());
+		assertEquals("", ((JTextField) getField(billExpense, "textFieldProvider")).getText());
+		assertEquals("", ((JTextField) getField(billExpense, "textFieldAmount")).getText());
 	}
 
 }
