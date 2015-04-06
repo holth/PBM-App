@@ -6,9 +6,11 @@ import javax.swing.*;
 
 import org.junit.*;
 
+import test.helpers.*;
 import views.*;
 
-public class ExpensesFrameTest extends ViewsTestHelper {
+
+public class ExpensesFrameTest extends TestHelper {
 	
 	ExpensesFrame expensesFrame;
 	

@@ -8,9 +8,10 @@ import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
 
+import test.helpers.*;
 import views.AddExpensePanel;
 
-public class AddExpensePanelTest extends ViewsTestHelper {
+public class AddExpensePanelTest extends TestHelper {
 
 	AddExpensePanel purchaseExpense;
 	AddExpensePanel billExpense;

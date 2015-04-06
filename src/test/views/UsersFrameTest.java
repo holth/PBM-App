@@ -7,8 +7,9 @@ import javax.swing.JPanel;
 import org.junit.*;
 
 import views.*;
+import test.helpers.*;
 
-public class UsersFrameTest extends ViewsTestHelper {
+public class UsersFrameTest extends TestHelper {
 	
 	UsersFrame usersFrame;
 	

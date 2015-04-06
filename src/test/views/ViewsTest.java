@@ -10,8 +10,9 @@ import javax.swing.JButton;
 import org.junit.*;
 
 import views.*;
+import test.helpers.*;
 
-public class ViewsTest extends ViewsTestHelper {
+public class ViewsTest extends TestHelper {
 
 	UsersFrame usersFrame;
 	ExpensesFrame expensesFrame;

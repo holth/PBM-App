@@ -6,10 +6,10 @@ import javax.swing.*;
 
 import org.junit.*;
 
-import views.*
-;
+import views.*;
+import test.helpers.*;
 
-public class UsersLoginPanelTest extends ViewsTestHelper {
+public class UsersLoginPanelTest extends TestHelper {
 	
 	UsersLoginPanel loginPanel;
 	

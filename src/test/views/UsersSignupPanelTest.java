@@ -9,8 +9,9 @@ import javax.swing.JTextField;
 import org.junit.*;
 
 import views.*;
+import test.helpers.*;
 
-public class UsersSignupPanelTest extends ViewsTestHelper {
+public class UsersSignupPanelTest extends TestHelper {
 
 	UsersSignupPanel signupPanel;
 	
