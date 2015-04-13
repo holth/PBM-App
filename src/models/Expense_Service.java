@@ -30,7 +30,6 @@ public class Expense_Service {
 
 	public Expense_Service() {
 		account_service = new Account_Service();
-
 	}
 
 	/**
@@ -41,14 +40,15 @@ public class Expense_Service {
 	 * @throws Exception
 	 */
 	public String getProviderNameByProviderId(int providerId) throws Exception {
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		con = DatabaseConnection.getInstance().getConnection();
 		Statement select = con.createStatement();
 		String query = "SELECT name FROM Provider WHERE id=" + providerId + ";";
 		ResultSet result = select.executeQuery(query);
 		if (result.next()) {
 			String name = result.getString("name");
 			result.close();
+			con=null; 
+			DatabaseConnection.getInstance().closeConnection();
 			return name;
 		}
 		throw new Exception("Reading error");
@@ -62,14 +62,15 @@ public class Expense_Service {
 	 * @throws Exception
 	 */
 	public String getProviderTypeByProviderId(int providerId) throws Exception {
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		con = DatabaseConnection.getInstance().getConnection();
 		Statement select = con.createStatement();
 		String query = "SELECT type FROM Provider WHERE id=" + providerId + ";";
 		ResultSet result = select.executeQuery(query);
 		if (result.next()) {
 			String name = result.getString("type");
 			result.close();
+			con=null;
+			DatabaseConnection.getInstance().closeConnection();
 			return name;
 		}
 		throw new Exception("Reading error");
@@ -77,8 +78,7 @@ public class Expense_Service {
 
 	public ArrayList<ArrayList<String>> getTransactionByUsernameAndType(
 			int userId, String type) throws Exception {
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		con = DatabaseConnection.getInstance().getConnection();
 		Statement select = con.createStatement();
 		String query = "SELECT * FROM Transactions WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id ="
 				+ userId
@@ -100,13 +100,13 @@ public class Expense_Service {
 			sub.add(result.getString("amount"));
 			sub.add(result.getString("time"));
 			sub.add(result.getString("duration"));
-			sub.add(result.getString("type"));
 			sub.add(result.getString("status"));
 			sub.add(result.getString("due_date"));
 
 			arrayList.add(sub);
 		}
-		con.close();
+		con=null; 
+		DatabaseConnection.getInstance().closeConnection();
 		return arrayList;
 	}
 
@@ -119,19 +119,18 @@ public class Expense_Service {
 	 */
 	public ArrayList<ArrayList<String>> getTransactionByUsername(int userId)
 			throws Exception {
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		con = DatabaseConnection.getInstance().getConnection();
 		Statement select = con.createStatement();
 		String query = "SELECT * FROM Transactions WHERE account_id IN (SELECT account_id FROM Owns WHERE user_id ="
 				+ userId + ") "
 				+ "ORDER BY category;";
-		select = con.createStatement(ResultSet.TYPE_FORWARD_ONLY,
-				ResultSet.CONCUR_READ_ONLY);
+		select = con.createStatement();
 		ResultSet result = select.executeQuery(query);
 		result = select.executeQuery(query);
 		ArrayList<ArrayList<String>> arrayList = new ArrayList<ArrayList<String>>();
 		while (result.next()) {
 			int providerId = result.getInt("provider_id");
+			System.out.println(providerId);
 			ArrayList<String> sub = new ArrayList<String>();
 			sub.add(result.getString("category"));
 			sub.add(result.getString("id"));
@@ -148,7 +147,8 @@ public class Expense_Service {
 
 			arrayList.add(sub);
 		}
-		con.close();
+		con=null; 
+		DatabaseConnection.getInstance().closeConnection();
 		return arrayList;
 	}
 	
@@ -164,8 +164,7 @@ public class Expense_Service {
 	public ArrayList<ArrayList<String>> getTransactionBy(
 			int userId, String category, String providerType, String expenseStatus)
 			throws Exception {
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		con = DatabaseConnection.getInstance().getConnection();
 		Statement select = con.createStatement();
 		
 		String query = "SELECT * FROM Transactions "
@@ -241,8 +240,7 @@ public class Expense_Service {
 	
 		}
 		
-		select = con.createStatement(ResultSet.TYPE_FORWARD_ONLY,
-				ResultSet.CONCUR_READ_ONLY);
+		select = con.createStatement();
 		ResultSet result = select.executeQuery(query);
 		result = select.executeQuery(query);
 		ArrayList<ArrayList<String>> arrayList = new ArrayList<ArrayList<String>>();
@@ -264,7 +262,8 @@ public class Expense_Service {
 
 			arrayList.add(sub);
 		}
-		con.close();
+		con=null; 
+		DatabaseConnection.getInstance().closeConnection();
 		return arrayList;
 	}
 	
@@ -275,8 +274,7 @@ public class Expense_Service {
 	 */
 	public ArrayList<String> getCategories()
 			throws Exception {
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		con = DatabaseConnection.getInstance().getConnection();
 		Statement select = con.createStatement();
 		String query = "SELECT DISTINCT category FROM Transactions ORDER BY category;";
 		select = con.createStatement(ResultSet.TYPE_FORWARD_ONLY,
@@ -287,7 +285,8 @@ public class Expense_Service {
 		while(result.next()) {
 			list.add(result.getString("category"));
 		}
-		con.close();
+		con=null; 
+		DatabaseConnection.getInstance().closeConnection();
 		return list;
 	}
 	
@@ -299,8 +298,7 @@ public class Expense_Service {
 	 */
 	public ArrayList<String> getCategoriesByUserId(int userId)
 			throws Exception {
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		con = DatabaseConnection.getInstance().getConnection();
 		Statement select = con.createStatement();
 		String query = "SELECT DISTINCT category "
 				+ "FROM Transactions "
@@ -315,7 +313,8 @@ public class Expense_Service {
 		while(result.next()) {
 			list.add(result.getString("category"));
 		}
-		con.close();
+		con=null; 
+		DatabaseConnection.getInstance().closeConnection();
 		return list;
 	}
 	
@@ -329,8 +328,7 @@ public class Expense_Service {
 	 */
 	public ArrayList<String> getCategoriesBy(int userId, String providerType, String status)
 			throws Exception {
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		con = DatabaseConnection.getInstance().getConnection();
 		Statement select = con.createStatement();
 		
 		String query = "";
@@ -372,7 +370,8 @@ public class Expense_Service {
 		while(result.next()) {
 			list.add(result.getString("category"));
 		}
-		con.close();
+		con=null; 
+		DatabaseConnection.getInstance().closeConnection();
 		return list;
 	}
 
@@ -385,14 +384,14 @@ public class Expense_Service {
 	 */
 	public boolean deleteTransaction(int transactionId) throws SQLException {
 		try {
-			Class.forName("org.sqlite.JDBC");
-			con = DriverManager.getConnection("jdbc:sqlite:test.db");
+			con = DatabaseConnection.getInstance().getConnection();
 			Statement delete = con.createStatement();
 			String query = "DELETE FROM Transactions WHERE id = "
 					+ transactionId + ";";
 			delete = con.createStatement();
 			int result = delete.executeUpdate(query);
-			con.close();
+			con=null; 
+			DatabaseConnection.getInstance().closeConnection();
 			if (result > 0)
 				return true;
 			return false;
@@ -411,8 +410,7 @@ public class Expense_Service {
 	 */
 	public void updateTransaction(int transactionId, String attribute,
 			String value) throws Exception {
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		con = DatabaseConnection.getInstance().getConnection();
 		Statement update = con.createStatement();
 		if (!(attribute.equals("provider_id") || attribute.equals("account_id") || attribute
 				.equals("amount"))) {
@@ -438,7 +436,8 @@ public class Expense_Service {
 			update = con.createStatement();
 			update.executeUpdate(query);
 		}
-		con.close();
+		con=null; 
+		DatabaseConnection.getInstance().closeConnection();
 	}
 
 	/**
@@ -474,40 +473,19 @@ public class Expense_Service {
 				+ "\',\'"
 				+ dueDate
 				+ "\' , \'" + duration + "\')";
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		con = DatabaseConnection.getInstance().getConnection();
 		Statement insert = con.createStatement();
 		int result = insert.executeUpdate(query);
 		if (result > 0) {
-			con.close();
+			con=null; 
+			DatabaseConnection.getInstance().closeConnection();
 			return true;
 		}
-		con.close();
+		con=null; 
+		DatabaseConnection.getInstance().closeConnection();
 		return false;
 	}
 
-	public boolean updateTransaction(int transactionId, int providerId,
-			int accountId, String accountType, String providerName,
-			String providerType, String address, float amount, String category,
-			String status, String duration, String dateTime, String dueDate)
-			throws Exception {
-		String query = "UPDATE Transactions " + "SET account_id = " + accountId
-				+ ", " + "provider_id=" + providerId + ", " + "type= \'"
-				+ category.toUpperCase().trim() + "\' , " + "status= \'"
-				+ status.toUpperCase().trim() + " \' ," + "amount=" + amount
-				+ " ," + "time= \'" + dateTime.toUpperCase().trim() + "\' ,"
-				+ "duration=\'" + duration.toUpperCase().trim() + "\' , "
-				+ "due_date= \'" + dueDate.toUpperCase().trim()
-				+ "\' WHERE id=" + transactionId + ";";
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
-		Statement update = con.createStatement();
-		int result = update.executeUpdate(query);
-		if (result == 1)
-			return true;
-		return false;
-
-	}
 
 	/**
 	 * For displaying provider address purpose
@@ -518,8 +496,7 @@ public class Expense_Service {
 	 */
 	public String getProviderAddressByProviderId(int providerId)
 			throws Exception {
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		con = DatabaseConnection.getInstance().getConnection();
 		Statement select = con.createStatement();
 		String query = "SELECT address FROM Provider WHERE id=" + providerId
 				+ ";";
@@ -527,6 +504,8 @@ public class Expense_Service {
 		if (result.next()) {
 			String address = result.getString("address");
 			result.close();
+			con=null;
+			DatabaseConnection.getInstance().closeConnection();
 			return address;
 		}
 		throw new Exception("Reading error");
@@ -548,14 +527,14 @@ public class Expense_Service {
 				+ type.toUpperCase().trim() + "\' AND address= \'"
 				+ address.toUpperCase().trim() + "\' ;";
 		// Get connection to DB
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		con = DatabaseConnection.getInstance().getConnection();
 		Statement select = con.createStatement();
 		ResultSet result = select.executeQuery(query);
 		result.next();
 		int providerId = new Integer(result.getInt("id"));
 		//System.out.println("This is provider id " + providerId);
-		con.close();
+		con=null; 
+		DatabaseConnection.getInstance().closeConnection();
 		return providerId;
 	}
 
@@ -579,8 +558,7 @@ public class Expense_Service {
 					providerType, address);
 		}
 		// Get connection to DB
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		con = DatabaseConnection.getInstance().getConnection();
 		Statement insert = con.createStatement();
 		String query = "INSERT INTO Provider(name,type,address) VALUES(\'"
 				+ providerName.toUpperCase().trim() + "\' , \'"
@@ -593,7 +571,8 @@ public class Expense_Service {
 				.toUpperCase().trim(), providerType.toUpperCase().trim(),
 				address.toUpperCase().trim());
 		// Close connection
-		con.close();
+		con=null; 
+		DatabaseConnection.getInstance().closeConnection();
 		return providerId;
 	}
 
@@ -609,8 +588,7 @@ public class Expense_Service {
 	public boolean isProviderExist(String providerName, String type,
 			String address) throws Exception {
 		// Get connection to DB
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		con = DatabaseConnection.getInstance().getConnection();
 		Statement select = con.createStatement();
 		String query = "SELECT COUNT(*) AS num FROM Provider WHERE name= \'"
 				+ providerName.toUpperCase().trim() + "\' AND type = \'"
@@ -621,10 +599,10 @@ public class Expense_Service {
 		int num = result.getInt("num");
 		//System.out.println("The num of provider query is " + num);
 		// Connection close
-		con.close();
+		con=null; 
+		DatabaseConnection.getInstance().closeConnection();
 		if (num > 0)
 			return true;
 		return false;
 	}
-
 }

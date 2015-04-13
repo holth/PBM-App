@@ -7,61 +7,13 @@ import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 public class User_Service {
 	private Account_Service account_service;
 	private static Connection con;
-	private String createUser = "CREATE TABLE IF NOT EXISTS User("
-			+ " id INTEGER  PRIMARY KEY,"
-			+ " username VARCHAR(64) NOT NULL UNIQUE,"
-			+ "password VARCHAR(64) NOT NULL);";
-	private String createAccount = "CREATE TABLE IF NOT EXISTS Account("
-			+ " id INTEGER  PRIMARY KEY,"
-			+ " bank_account_id INTEGER NOT NULL,"
-			+ " balance FLOAT DEFAULT 0.0," + " type VARCHAR(10) NOT NULL,"
-			+ " bank VARCHAR(64) NOT NULL,"
-			+ " address VARCHAR(128) NOT NULL);";
-	private String createOwns = "CREATE TABLE IF NOT EXISTS Owns("
-			+ " user_id INT NOT NULL," + " account_id INT NOT NULL,"
-			+ " PRIMARY KEY(user_id, account_id),"
-			+ " FOREIGN KEY(user_id) REFERENCES User(id)"
-			+ " ON UPDATE CASCADE " + " ON DELETE CASCADE,"
-			+ " FOREIGN KEY(account_id) REFERENCES Account(id)"
-			+ " ON DELETE CASCADE" + " ON UPDATE CASCADE); ";
-	private String createProvider = "CREATE TABLE IF NOT EXISTS Provider("
-			+ " id INTEGER  PRIMARY KEY," + " name VARCHAR(50) NOT NULL,"
-			+ " type VARCHAR(10) NOT NULL," + " address VARCHAR(50) NOT NULL,"
-			+ " UNIQUE(name,type,address));";
-	private String createTransactions = "CREATE TABLE IF NOT EXISTS Transactions("
-			+ " id INTEGER PRIMARY KEY,"
-			+ " account_id INT NOT NULL,"
-			+ " provider_id INT NOT NULL,"
-			+ " category VARCHAR(50) NOT NULL,"
-			+ " status VARCHAR(10) NOT NULL,"
-			+ " amount float DEFAULT 0.0,"
-			+ " time VARCHAR(30) NOT NULL,"
-			+ " due_date VARCHAR(20), "
-			+ " duration VARCHAR(10),"
-			+ " FOREIGN KEY(account_id) REFERENCES Account(id) "
-			+ " ON DELETE CASCADE "
-			+ " ON UPDATE CASCADE,"
-			+ " FOREIGN KEY (provider_id) REFERENCES Provider(id) "
-			+ " ON DELETE CASCADE " + " ON UPDATE CASCADE,"
-			+ " FOREIGN KEY(category_id) REFERENCES Category(id) "
-			+ " ON UPDATE CASCADE);";
 	
 	public User_Service() throws Exception{
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
-		Statement create = con.createStatement();
-		create.executeUpdate(createUser);
-		create.executeUpdate(createAccount);
-		create.executeUpdate(createProvider);
-		create.executeUpdate(createTransactions);
-		create.executeUpdate(createOwns);
-		con.close();
-
 		this.account_service=new Account_Service();
 	}
 	
 	public boolean insertNewUser(String username, String password) throws Exception {
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		con  = DatabaseConnection.getInstance().getConnection();
 		/*
 		 * Create CASH Account for user
 		 */
@@ -80,10 +32,12 @@ public class User_Service {
 			// Add Credit Account
 			addBankAccount(2, userId, (float) 0.0, "CREDIT CARD", "NONE",
 					"NONE");
-			con.close();
+			con=null;
+			DatabaseConnection.getInstance().closeConnection();
 			return true;
 		} else {
-			con.close();
+			con=null;
+			DatabaseConnection.getInstance().closeConnection();
 			return false;
 		}
 
@@ -92,8 +46,7 @@ public class User_Service {
 	public boolean isUserExist(String username) throws SQLException {
 		try {
 			// Get connection to DB
-			Class.forName("org.sqlite.JDBC");
-			con = DriverManager.getConnection("jdbc:sqlite:test.db");
+			con = DatabaseConnection.getInstance().getConnection();
 			Statement select = con.createStatement();
 			String query = "SELECT COUNT(*) AS num FROM User WHERE username= \'"
 					+ username + "\';";
@@ -101,7 +54,8 @@ public class User_Service {
 			ResultSet result = select.executeQuery(query);
 			result.next();
 			int count = result.getInt("num");
-			con.close();
+			con=null;
+			DatabaseConnection.getInstance().closeConnection();
 			if (count != 0)
 				return true;
 			return false;
@@ -121,8 +75,7 @@ public class User_Service {
 	public boolean isUsernameMatchPassword(String username, String password)
 			throws SQLException {
 		try {
-			Class.forName("org.sqlite.JDBC");
-			con = DriverManager.getConnection("jdbc:sqlite:test.db");
+			con = DatabaseConnection.getInstance().getConnection();
 			Statement select = con.createStatement();
 			String query = "SELECT COUNT(*) AS num FROM User WHERE username= \'"
 					+ username
@@ -131,7 +84,8 @@ public class User_Service {
 			select = con.createStatement();
 			ResultSet result = select.executeQuery(query);
 			int count = result.getInt("num");
-			con.close();
+			con=null;
+			DatabaseConnection.getInstance().closeConnection();
 			if (count != 0)
 				return true;
 			return false;
@@ -142,8 +96,7 @@ public class User_Service {
 	}
 	public int getUserIdByUsername(String username) throws Exception {
 		// Get connection to DB
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		con = DatabaseConnection.getInstance().getConnection();
 		Statement select = con.createStatement();
 		String query = "SELECT id FROM User WHERE username = \'" + username
 				+ "\' ;";
@@ -152,7 +105,9 @@ public class User_Service {
 		if (result.next()) {
 			int userId = result.getInt("id");
 			// Connection close
-			con.close();
+
+			con=null;
+			DatabaseConnection.getInstance().closeConnection();
 			return userId;
 		}
 		throw new Exception("Error user_id READING");
@@ -166,7 +121,7 @@ public class User_Service {
 	 * @param accountType
 	 * @param bank
 	 * @param address
-	 * @return
+	 * @return boolean
 	 * @throws Exception
 	 */
 	public boolean addBankAccount(int bankAccountId, int userId, float balance,
@@ -178,8 +133,7 @@ public class User_Service {
 			return false;
 		try {
 			// Get connection to DB
-			Class.forName("org.sqlite.JDBC");
-			con = DriverManager.getConnection("jdbc:sqlite:test.db");
+			con = DatabaseConnection.getInstance().getConnection();
 			Statement insert = con.createStatement();
 			String query = "INSERT INTO Account (bank_account_id,balance,type,bank,address) VALUES("
 					+ bankAccountId
@@ -208,11 +162,15 @@ public class User_Service {
 				// System.out.println("The result for create owns is " +
 				// result);
 			}
-			con.close();
+
+			con=null;
+			DatabaseConnection.getInstance().closeConnection();
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			con.close();
+
+			con=null;
+			DatabaseConnection.getInstance().closeConnection();
 			return false;
 		}
 	}
@@ -228,14 +186,14 @@ public class User_Service {
 	private boolean isBankAccountExist(int bankAccountId, String type)
 			throws Exception {
 
-		Class.forName("org.sqlite.JDBC");
-		con = DriverManager.getConnection("jdbc:sqlite:test.db");
+		con = DatabaseConnection.getInstance().getConnection();
 		Statement select = con.createStatement();
 		String query = "SELECT * FROM Account WHERE bank_account_id = "
 				+ bankAccountId + " AND type = \'" + type.toUpperCase().trim()
 				+ "\' ;";
 		int result = select.executeUpdate(query);
-		con.close();
+		con=null;
+		DatabaseConnection.getInstance().closeConnection();
 		if (result > 0)
 			return true;
 		return false;

@@ -57,20 +57,7 @@ public class Expense_BLL {
 		this.expense_service.updateTransaction(transactionId, attribute, value);
 	}
 
-	public void updateExpense(int transactionId, String username,
-			String accountType, String providerName, String providerType,
-			String address, String amount, String type, String status,
-			String duration, String dateTime, String dueDate) throws Exception {
-		int providerId = 0;
-		int userId = this.user_service.getUserIdByUsername(username);
-		int accountId = this.account_service.getAccountIdByUsernameAndType(
-				userId, accountType);
-		this.expense_service.updateTransaction(transactionId, providerId,
-				accountId, accountType, providerName, providerType, address,
-				Float.valueOf(amount), type, status, duration, dateTime,
-				dueDate);
 
-	}
 
 	public boolean addExpense(String username, String accountType,
 			String providerName, String providerType, String address,
