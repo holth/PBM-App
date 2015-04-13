@@ -1,6 +1,7 @@
-package models;
+package test.models;
 
 import static org.junit.Assert.*;
+import models.DatabaseConnection;
 
 import org.junit.Assert;
 import org.junit.Before;

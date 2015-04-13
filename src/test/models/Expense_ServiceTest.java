@@ -1,4 +1,4 @@
-package models;
+package test.models;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import junit.framework.Assert;
+import models.Expense_Service;
 
 import org.junit.Before;
 import org.junit.Test;

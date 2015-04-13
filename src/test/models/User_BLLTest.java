@@ -1,4 +1,4 @@
-package models;
+package test.models;
 
 import static org.junit.Assert.*;
 
@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import junit.framework.Assert;
+import models.User_BLL;
 
 import org.junit.Before;
 import org.junit.Test;
